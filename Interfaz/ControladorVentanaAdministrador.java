@@ -60,7 +60,11 @@ public class ControladorVentanaAdministrador implements Initializable {
 
     public void initialize(URL fxmlLocations, ResourceBundle resources){
 
+
+        //cacaacagdgtgthfth
     }
+
+
 
 
 }
