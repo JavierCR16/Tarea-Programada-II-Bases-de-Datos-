@@ -48,8 +48,6 @@ public class ControladorVentanaLogin implements Initializable{
     @FXML
     Label contrasennaOlvidadaAgente;
 
-    @FXML
-    Label contrasennaOlvidadaParticipante;
 
     Scene escenaActual;
 
@@ -83,33 +81,21 @@ public class ControladorVentanaLogin implements Initializable{
             escenaActual.setCursor(Cursor.DEFAULT);
         });
 
-        contrasennaOlvidadaParticipante.setOnMouseEntered(event->{
-
-            escenaActual = contrasennaOlvidadaParticipante.getScene();
-            escenaActual.setCursor(Cursor.HAND);
-
-        });
-
-        contrasennaOlvidadaParticipante.setOnMouseExited(event->{
-            Scene escenaActual = contrasennaOlvidadaParticipante.getScene();
-            escenaActual.setCursor(Cursor.DEFAULT);
-        });
-
         contrasennaOlvidadaAdministrador.setOnMouseClicked(event -> {
 
-            if(cuadroUsuarioAdministrador.getText().equals(""))
-                llamarAlerta("Se debe ingresar el usuario para poder cambiar la contraseña");
+            if(cuadroUsuarioAdministrador.getText().equals("") || cuadroContrasennaAdministrador.getText().equals(""))
+                llamarAlerta("Se debe ingresar todos los datos para poder cambiar la contraseña");
             else{
                 //TODO Hacer procedure que extraiga una contrasenna dado el usuario.
-                abrirVentanaCambiarContrasenna();//Mandar por parametro la contrasena
+                abrirVentanaCambiarContrasenna();//Mandar por parametro la contrasena y el usuario
             }
 
         });
 
         contrasennaOlvidadaAgente.setOnMouseClicked(event -> {
 
-            if(cuadroUsuarioAgente.getText().equals(""))
-                llamarAlerta("Se debe ingresar el usuario para poder cambiar la contraseña");
+            if(cuadroUsuarioAgente.getText().equals("")||cuadroContrasennaAgente.getText().equals(""))
+                llamarAlerta("Se debe ingresar todos los datos para poder cambiar la contraseña");
 
             else{
                 //TODO Hacer procedure que extraiga una contrasenna dado el usuario.
@@ -118,17 +104,6 @@ public class ControladorVentanaLogin implements Initializable{
 
         });
 
-        contrasennaOlvidadaParticipante.setOnMouseClicked(event -> {
-
-            if(cuadroUsuarioParticipante.getText().equals(""))
-                llamarAlerta("Se debe ingresar el usuario para poder cambiar la contraseña");
-
-            else{
-                //TODO Hacer procedure que extraiga una contrasenna dado el usuario.
-                abrirVentanaCambiarContrasenna();//Mandar por parametro la contrasena
-            }
-
-        });
 
         botonLoguearAdministrador.setOnAction(event -> {
             ingresarComoAdministrador();
@@ -178,6 +153,26 @@ public class ControladorVentanaLogin implements Initializable{
 
     }
 
+    public void abrirVentanaAgente(){
+
+        try{
+            FXMLLoader loader = new FXMLLoader();
+            Parent root = loader.load(getClass().getResource("VentanaAgente.fxml").openStream());
+            Stage escenario = new Stage();
+            escenario.setTitle("Agente");
+            escenario.setScene(new Scene(root,1053,417));
+            escenario.show();
+        }
+        catch(Exception e){
+            e.printStackTrace();
+        }
+
+    }
+
+    public void abrirVentanaAdministrador(){}
+
+    public void abrirVentanaParticipante(){}
+
     public void llamarAlerta(String error){
         Alert alerta = new Alert(Alert.AlertType.WARNING);
         alerta.setTitle("Error");
@@ -198,10 +193,11 @@ public class ControladorVentanaLogin implements Initializable{
 
     public void ingresarComoAgente(){
         String usuarioAgente = cuadroUsuarioAgente.getText();
-        String contrasennaAgente = cuadroUsuarioAgente.getText();
+        String contrasennaAgente = cuadroContrasennaAgente.getText();
         if(usuarioAgente.equals("") || contrasennaAgente.equals(""))
             llamarAlerta("Se deben ingresar todos los datos");
         else{
+
             //TODO PROCEDURE QUE BUSQUE EL USUARIO, SI EXISTE ENTRAR A LA PANTALLA, SINO DISPARAR ALERTA GG IZY
         }
     }
