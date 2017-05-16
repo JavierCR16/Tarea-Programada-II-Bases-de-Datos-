@@ -32,23 +32,23 @@
             <Font name="Arial Rounded MT Bold" size="13.0" />
          </font>
       </Label>
-      <TextField layoutX="185.0" layoutY="77.0" />
-      <TextField layoutX="120.0" layoutY="116.0" prefHeight="25.0" prefWidth="237.0" />
-      <TextField layoutX="111.0" layoutY="196.0" />
+      <TextField fx:id="cuentaNuevaCedula" layoutX="185.0" layoutY="77.0" />
+      <TextField fx:id="cuentaNuevaNombre" layoutX="120.0" layoutY="116.0" prefHeight="25.0" prefWidth="237.0" />
+      <TextField fx:id="cuentaNuevaTelefono" layoutX="111.0" layoutY="196.0" />
       <Label layoutX="43.0" layoutY="240.0" text="Correo Electrónico">
          <font>
             <Font name="Arial Rounded MT Bold" size="13.0" />
          </font>
       </Label>
-      <TextField layoutX="170.0" layoutY="236.0" prefHeight="25.0" prefWidth="193.0" />
+      <TextField fx:id="cuentaNuevaCorreo" layoutX="170.0" layoutY="236.0" prefHeight="25.0" prefWidth="193.0" />
       <Separator layoutX="391.0" layoutY="26.0" orientation="VERTICAL" prefHeight="365.0" prefWidth="0.0" />
-      <Button layoutX="140.0" layoutY="354.0" mnemonicParsing="false" text="Agregar Participante" />
+      <Button fx:id="botonAgregarParticipante" layoutX="140.0" layoutY="354.0" mnemonicParsing="false" text="Agregar Participante" />
       <Label layoutX="515.0" layoutY="26.0" text="Realizar Depósito">
          <font>
             <Font name="Baskerville Old Face" size="20.0" />
          </font>
       </Label>
-      <TextField layoutX="578.0" layoutY="93.0" />
+      <TextField fx:id="cuadroCedulaDeposito" layoutX="578.0" layoutY="93.0" />
       <Label layoutX="437.0" layoutY="98.0" text="Cédula de Identidad">
          <font>
             <Font name="Arial Rounded MT Bold" size="13.0" />
@@ -64,9 +64,9 @@
             <Font name="Arial Rounded MT Bold" size="13.0" />
          </font>
       </Label>
-      <TextField layoutX="421.0" layoutY="210.0" />
-      <TextField layoutX="602.0" layoutY="210.0" />
-      <Button layoutX="552.0" layoutY="304.0" mnemonicParsing="false" text="Depositar" />
+      <TextField fx:id="cuadroDolaresDeposito" layoutX="421.0" layoutY="210.0" />
+      <TextField fx:id="cuadroColonesDeposito" layoutX="602.0" layoutY="210.0" />
+      <Button fx:id="botonDepositar" layoutX="552.0" layoutY="304.0" mnemonicParsing="false" text="Depositar" />
       <Label layoutX="885.0" layoutY="26.0" text="Retiros">
          <font>
             <Font name="Baskerville Old Face" size="20.0" />
@@ -77,22 +77,21 @@
             <Font name="Arial Rounded MT Bold" size="13.0" />
          </font>
       </Label>
-      <TextField layoutX="850.0" layoutY="106.0" />
+      <TextField fx:id="cuadroCedulaRetiro" layoutX="850.0" layoutY="106.0" />
       <Label layoutX="850.0" layoutY="153.0" text="Dólares">
          <font>
             <Font name="Arial Rounded MT Bold" size="13.0" />
          </font>
       </Label>
-      <TextField layoutX="850.0" layoutY="184.0" />
-      <Button layoutX="899.0" layoutY="292.0" mnemonicParsing="false" text="Retirar" />
-      <Button layoutX="955.0" layoutY="379.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="88.0" text="Cerrar Sesión" />
-      <TextField layoutX="850.0" layoutY="247.0" />
+      <TextField fx:id="cuadroDolaresRetiro" layoutX="850.0" layoutY="184.0" />
+      <Button fx:id="botonRetirar" layoutX="899.0" layoutY="292.0" mnemonicParsing="false" text="Retirar" />
+      <Button fx:id="botonCerrarSesion" layoutX="955.0" layoutY="379.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="88.0" text="Cerrar Sesión" />
+      <TextField fx:id="cuadroColonesRetiro" layoutX="850.0" layoutY="247.0" />
       <Label layoutX="849.0" layoutY="224.0" text="Colones">
          <font>
             <Font name="Arial Rounded MT Bold" size="13.0" />
          </font>
       </Label>
-      <TextField layoutX="142.0" layoutY="276.0" prefHeight="25.0" prefWidth="193.0" />
       <Label layoutX="44.0" layoutY="280.0" text="Palabra Clave">
          <font>
             <Font name="Arial Rounded MT Bold" size="13.0" />
@@ -103,7 +102,8 @@
             <Font name="Arial Rounded MT Bold" size="13.0" />
          </font>
       </Label>
-      <TextField layoutX="142.0" layoutY="305.0" prefHeight="25.0" prefWidth="193.0" />
       <Separator layoutX="781.0" layoutY="26.0" orientation="VERTICAL" prefHeight="365.0" prefWidth="0.0" />
+      <PasswordField fx:id="cuentaNuevaClave" layoutX="142.0" layoutY="276.0" prefHeight="25.0" prefWidth="193.0" />
+      <PasswordField fx:id="cuentaNuevaConfirmacion" layoutX="142.0" layoutY="304.0" prefHeight="25.0" prefWidth="193.0" />
    </children>
 </Pane>

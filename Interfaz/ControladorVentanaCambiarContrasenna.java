@@ -69,6 +69,8 @@ public class ControladorVentanaCambiarContrasenna implements Initializable {
                 // TODO Con un procedure hacer update de la contra del usuario
             }
 
+            limpiarPantalla();
+
         });
 
     }
@@ -78,6 +80,14 @@ public class ControladorVentanaCambiarContrasenna implements Initializable {
         alerta.setTitle("Error");
         alerta.setContentText(error);
         alerta.showAndWait();
+    }
+
+    public void limpiarPantalla(){
+        verificacion1.setText("");
+        verificacion2.setText("");
+        cuadroContrasennaAnterior.clear();
+        cuadroContrasennaNueva.clear();
+        cuadroRepetirContrasenna.clear();
     }
 
 }

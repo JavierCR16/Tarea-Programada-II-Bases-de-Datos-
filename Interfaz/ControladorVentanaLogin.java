@@ -197,7 +197,7 @@ public class ControladorVentanaLogin implements Initializable{
         if(usuarioAgente.equals("") || contrasennaAgente.equals(""))
             llamarAlerta("Se deben ingresar todos los datos");
         else{
-
+            abrirVentanaAgente();
             //TODO PROCEDURE QUE BUSQUE EL USUARIO, SI EXISTE ENTRAR A LA PANTALLA, SINO DISPARAR ALERTA GG IZY
         }
     }
