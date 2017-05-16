@@ -63,7 +63,10 @@ public class ControladorVentanaCambiarContrasenna implements Initializable {
                 llamarAlerta("Se deben llenar todos los campos");
 
             else if(!contraAnterior.equals(contrasennaAnteriorUsuario))
-                llamarAlerta("La contraseña anterior no coincide. Intente de nuevo");
+                llamarAlerta("La contraseña usada anteriormente no coincide. Intente de nuevo");
+
+            else if(!contraNueva.equals(contraRepetir))
+                llamarAlerta("La nueva contraseña no coincide. Intente de nuevo");
 
             else{
                 // TODO Con un procedure hacer update de la contra del usuario

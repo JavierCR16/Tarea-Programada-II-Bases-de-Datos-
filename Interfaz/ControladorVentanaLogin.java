@@ -107,14 +107,17 @@ public class ControladorVentanaLogin implements Initializable{
 
         botonLoguearAdministrador.setOnAction(event -> {
             ingresarComoAdministrador();
+            limpiarPantallaLogin();
         });
 
         botonLoguearAgente.setOnAction(event -> {
             ingresarComoAgente();
+            limpiarPantallaLogin();
         });
 
         botonLoguearParticipante.setOnAction(event -> {
             ingresarComoParticipante();
+            limpiarPantallaLogin();
         });
 
 
@@ -143,7 +146,7 @@ public class ControladorVentanaLogin implements Initializable{
             Parent root = loader.load(getClass().getResource("VentanaCambiarContrasenna.fxml").openStream());
             Stage escenario = new Stage();
             escenario.setTitle("Contraseña");
-            escenario.setScene(new Scene(root,498,394));
+            escenario.setScene(new Scene(root,498,354));
             escenario.show();
 
         }
@@ -169,7 +172,19 @@ public class ControladorVentanaLogin implements Initializable{
 
     }
 
-    public void abrirVentanaAdministrador(){}
+    public void abrirVentanaAdministrador(){
+        try{
+            FXMLLoader loader = new FXMLLoader();
+            Parent root = loader.load(getClass().getResource("VentanaAdministrador.fxml").openStream());
+            Stage escenario = new Stage();
+            escenario.setTitle("Administrador");
+            escenario.setScene(new Scene(root,1275,440));
+            escenario.show();
+        }
+        catch(Exception e){
+            e.printStackTrace();
+        }
+    }
 
     public void abrirVentanaParticipante(){}
 
@@ -187,6 +202,7 @@ public class ControladorVentanaLogin implements Initializable{
         if(usuarioAdmi.equals("") || contrasennaAdmi.equals(""))
             llamarAlerta("Se deben ingresar todos los datos");
         else{
+            abrirVentanaAdministrador();
             //TODO PROCEDURE QUE BUSQUE EL USUARIO, SI EXISTE ENTRAR A LA PANTALLA, SINO DISPARAR ALERTA GG IZY
         }
     }
@@ -222,6 +238,15 @@ public class ControladorVentanaLogin implements Initializable{
             }
             //TODO PROCEDURE QUE BUSQUE EL USUARIO, SI EXISTE ENTRAR A LA PANTALLA, SINO DISPARAR ALERTA GG IZY
         }
+    }
+
+    public void limpiarPantallaLogin(){
+        cuadroUsuarioParticipante.clear();
+        cuadroUsuarioAgente.clear();
+        cuadroUsuarioAdministrador.clear();
+        cuadroContrasennaParticipante.clear();
+        cuadroContrasennaAgente.clear();
+        cuadroContrasennaAdministrador.clear();
     }
 
 
