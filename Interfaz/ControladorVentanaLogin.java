@@ -171,7 +171,21 @@ public class ControladorVentanaLogin implements Initializable{
         }
 
     }
+    public void abrirVentanaParticipante(){
 
+        try{
+            FXMLLoader loader = new FXMLLoader();
+            Parent root = loader.load(getClass().getResource("VentanaParticipante.fxml").openStream());
+            Stage escenario = new Stage();
+            escenario.setTitle("Participante");
+            escenario.setScene(new Scene(root,1053,417));
+            escenario.show();
+        }
+        catch(Exception e){
+            e.printStackTrace();
+        }
+
+    }
     public void abrirVentanaAdministrador(){
         try{
             FXMLLoader loader = new FXMLLoader();
@@ -186,7 +200,6 @@ public class ControladorVentanaLogin implements Initializable{
         }
     }
 
-    public void abrirVentanaParticipante(){}
 
     public void llamarAlerta(String error){
         Alert alerta = new Alert(Alert.AlertType.WARNING);
@@ -225,6 +238,7 @@ public class ControladorVentanaLogin implements Initializable{
         if(usuarioParticipante.equals("") || contrasennaParticipante.equals(""))
             llamarAlerta("Se deben ingresar todos los datos");
         else{
+            abrirVentanaParticipante();
             try{//Era de prueba para ver que extrai xdxdxd
                 String procedimiento = "{call caca(?)}";
                 CallableStatement ejecutarProcPrueba = connection.prepareCall(procedimiento);

@@ -2,7 +2,6 @@
 
 <?import javafx.scene.text.*?>
 <?import javafx.scene.control.*?>
-<?import java.lang.*?>
 <?import javafx.scene.layout.*?>
 
 <Pane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="417.0" prefWidth="1053.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Interfaz.ControladorVentanaAgente">
@@ -12,98 +11,104 @@
             <Font name="Baskerville Old Face" size="20.0" />
          </font>
       </Label>
-      <Label layoutX="43.0" layoutY="81.0" text="Cédula de Identidad">
+      <Label layoutX="58.0" layoutY="81.0" text="Cédula de Identidad:">
          <font>
             <Font name="Arial Rounded MT Bold" size="13.0" />
          </font>
       </Label>
-      <Label layoutX="43.0" layoutY="120.0" text="Nombre">
+      <Label layoutX="58.0" layoutY="118.0" text="Nombre:">
          <font>
             <Font name="Arial Rounded MT Bold" size="13.0" />
          </font>
       </Label>
-      <Label layoutX="43.0" layoutY="161.0" text="Fecha de Nacimiento">
+      <Label layoutX="58.0" layoutY="152.0" text="Fecha de Nacimiento:">
          <font>
             <Font name="Arial Rounded MT Bold" size="13.0" />
          </font>
       </Label>
-      <Label layoutX="43.0" layoutY="200.0" text="Teléfono">
+      <Label layoutX="58.0" layoutY="197.0" text="Teléfono:">
          <font>
             <Font name="Arial Rounded MT Bold" size="13.0" />
          </font>
       </Label>
-      <TextField fx:id="cuentaNuevaCedula" layoutX="185.0" layoutY="77.0" />
-      <TextField fx:id="cuentaNuevaNombre" layoutX="120.0" layoutY="116.0" prefHeight="25.0" prefWidth="237.0" />
-      <TextField fx:id="cuentaNuevaTelefono" layoutX="111.0" layoutY="196.0" />
-      <Label layoutX="43.0" layoutY="240.0" text="Correo Electrónico">
+      <TextField fx:id="cuentaNuevaCedula" layoutX="208.0" layoutY="81.0" prefHeight="25.0" prefWidth="164.0" />
+      <TextField fx:id="cuentaNuevaNombre" layoutX="208.0" layoutY="116.0" prefHeight="25.0" prefWidth="164.0" />
+      <TextField fx:id="cuentaNuevaTelefono" layoutX="209.0" layoutY="196.0" prefHeight="25.0" prefWidth="164.0" />
+      <Label layoutX="58.0" layoutY="236.0" text="Correo Electrónico:">
          <font>
             <Font name="Arial Rounded MT Bold" size="13.0" />
          </font>
       </Label>
-      <TextField fx:id="cuentaNuevaCorreo" layoutX="170.0" layoutY="236.0" prefHeight="25.0" prefWidth="193.0" />
+      <TextField fx:id="cuentaNuevaCorreo" layoutX="209.0" layoutY="235.0" prefHeight="25.0" prefWidth="164.0" />
       <Separator layoutX="391.0" layoutY="26.0" orientation="VERTICAL" prefHeight="365.0" prefWidth="0.0" />
-      <Button fx:id="botonAgregarParticipante" layoutX="140.0" layoutY="354.0" mnemonicParsing="false" text="Agregar Participante" />
-      <Label layoutX="515.0" layoutY="26.0" text="Realizar Depósito">
+      <Button fx:id="botonAgregarParticipante" layoutX="247.0" layoutY="354.0" mnemonicParsing="false" text="Agregar Participante" />
+      <Label layoutX="481.0" layoutY="26.0" text="Realizar Depósito">
          <font>
             <Font name="Baskerville Old Face" size="20.0" />
          </font>
       </Label>
-      <TextField fx:id="cuadroCedulaDeposito" layoutX="578.0" layoutY="93.0" />
-      <Label layoutX="437.0" layoutY="98.0" text="Cédula de Identidad">
+      <TextField fx:id="cuadroCedulaDeposito" layoutX="548.0" layoutY="94.0" prefHeight="25.0" prefWidth="164.0" />
+      <Label layoutX="417.0" layoutY="98.0" text="Cédula de Identidad:">
          <font>
             <Font name="Arial Rounded MT Bold" size="13.0" />
          </font>
       </Label>
-      <Label layoutX="470.0" layoutY="173.0" text="Dólares">
+      <Label layoutX="417.0" layoutY="168.0" text="Dólares:">
          <font>
             <Font name="Arial Rounded MT Bold" size="13.0" />
          </font>
       </Label>
-      <Label layoutX="650.0" layoutY="173.0" text="Colones">
+      <Label layoutX="416.0" layoutY="132.0" text="Colones:">
          <font>
             <Font name="Arial Rounded MT Bold" size="13.0" />
          </font>
       </Label>
-      <TextField fx:id="cuadroDolaresDeposito" layoutX="421.0" layoutY="210.0" />
-      <TextField fx:id="cuadroColonesDeposito" layoutX="602.0" layoutY="210.0" />
-      <Button fx:id="botonDepositar" layoutX="552.0" layoutY="304.0" mnemonicParsing="false" text="Depositar" />
+      <TextField fx:id="cuadroDolaresDeposito" layoutX="548.0" layoutY="165.0" prefHeight="25.0" prefWidth="164.0" />
+      <TextField fx:id="cuadroColonesDeposito" layoutX="548.0" layoutY="129.0" prefHeight="25.0" prefWidth="164.0" />
+      <Button fx:id="botonDepositar" layoutX="622.0" layoutY="232.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="86.0" text="Depositar" />
       <Label layoutX="885.0" layoutY="26.0" text="Retiros">
          <font>
             <Font name="Baskerville Old Face" size="20.0" />
          </font>
       </Label>
-      <Label layoutX="850.0" layoutY="77.0" text="Cédula de Identidad">
+      <Label layoutX="739.0" layoutY="98.0" text="Cédula de Identidad:">
          <font>
             <Font name="Arial Rounded MT Bold" size="13.0" />
          </font>
       </Label>
-      <TextField fx:id="cuadroCedulaRetiro" layoutX="850.0" layoutY="106.0" />
-      <Label layoutX="850.0" layoutY="153.0" text="Dólares">
+      <TextField fx:id="cuadroCedulaRetiro" layoutX="873.0" layoutY="94.0" prefHeight="25.0" prefWidth="164.0" />
+      <Label layoutX="740.0" layoutY="132.0" text="Dólares:">
          <font>
             <Font name="Arial Rounded MT Bold" size="13.0" />
          </font>
       </Label>
-      <TextField fx:id="cuadroDolaresRetiro" layoutX="850.0" layoutY="184.0" />
-      <Button fx:id="botonRetirar" layoutX="899.0" layoutY="292.0" mnemonicParsing="false" text="Retirar" />
+      <TextField fx:id="cuadroDolaresRetiro" layoutX="873.0" layoutY="129.0" prefHeight="25.0" prefWidth="164.0" />
+      <Button fx:id="botonRetirar" layoutX="951.0" layoutY="232.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="86.0" text="Retirar" />
       <Button fx:id="botonCerrarSesion" layoutX="955.0" layoutY="379.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="88.0" text="Cerrar Sesión" />
-      <TextField fx:id="cuadroColonesRetiro" layoutX="850.0" layoutY="247.0" />
-      <Label layoutX="849.0" layoutY="224.0" text="Colones">
+      <TextField fx:id="cuadroColonesRetiro" layoutX="873.0" layoutY="164.0" prefHeight="25.0" prefWidth="164.0" />
+      <Label layoutX="739.0" layoutY="168.0" text="Colones:">
          <font>
             <Font name="Arial Rounded MT Bold" size="13.0" />
          </font>
       </Label>
-      <Label layoutX="44.0" layoutY="280.0" text="Palabra Clave">
+      <Label layoutX="59.0" layoutY="273.0" text="Contraseña:">
          <font>
             <Font name="Arial Rounded MT Bold" size="13.0" />
          </font>
       </Label>
-      <Label layoutX="44.0" layoutY="309.0" text="Confirmacion">
+      <Label layoutX="59.0" layoutY="309.0" text="Confirmacion:">
          <font>
             <Font name="Arial Rounded MT Bold" size="13.0" />
          </font>
       </Label>
-      <Separator layoutX="781.0" layoutY="26.0" orientation="VERTICAL" prefHeight="365.0" prefWidth="0.0" />
-      <PasswordField fx:id="cuentaNuevaClave" layoutX="142.0" layoutY="276.0" prefHeight="25.0" prefWidth="193.0" />
-      <PasswordField fx:id="cuentaNuevaConfirmacion" layoutX="142.0" layoutY="304.0" prefHeight="25.0" prefWidth="193.0" />
+      <Separator layoutX="728.0" layoutY="26.0" orientation="VERTICAL" prefHeight="365.0" prefWidth="0.0" />
+      <PasswordField fx:id="cuentaNuevaClave" layoutX="209.0" layoutY="272.0" prefHeight="25.0" prefWidth="164.0" />
+      <PasswordField fx:id="cuentaNuevaConfirmacion" layoutX="209.0" layoutY="307.0" prefHeight="25.0" prefWidth="164.0" />
+      <Label alignment="CENTER" contentDisplay="CENTER" layoutX="322.0" layoutY="172.0" opacity="0.3" prefHeight="17.0" prefWidth="50.0" text="Día" />
+      <Label alignment="CENTER" contentDisplay="CENTER" layoutX="265.0" layoutY="172.0" opacity="0.3" prefHeight="17.0" prefWidth="49.0" text="Mes" />
+      <Label alignment="CENTER" layoutX="209.0" layoutY="172.0" opacity="0.3" prefHeight="17.0" prefWidth="50.0" text="Año" />
+      <ComboBox fx:id="cajaDia" layoutX="322.0" layoutY="149.0" prefHeight="25.0" prefWidth="10.0" />
+      <ComboBox fx:id="cajaMes" layoutX="265.0" layoutY="149.0" prefHeight="25.0" prefWidth="0.0" />
+      <ComboBox fx:id="cajaAno" layoutX="209.0" layoutY="149.0" prefHeight="25.0" prefWidth="0.0" />
    </children>
 </Pane>

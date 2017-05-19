@@ -2,12 +2,7 @@ package Interfaz;
 
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
-import javafx.scene.Scene;
-import javafx.scene.control.Alert;
-import javafx.scene.control.Button;
-import javafx.scene.control.PasswordField;
-import javafx.scene.control.TextField;
-import javafx.scene.layout.Pane;
+import javafx.scene.control.*;
 import javafx.stage.Stage;
 
 import java.net.URL;
@@ -17,6 +12,15 @@ import java.util.ResourceBundle;
  * Created by Javier on 5/15/2017.
  */
 public class ControladorVentanaAgente implements Initializable {
+
+    @FXML
+    ComboBox cajaDia;
+
+    @FXML
+    ComboBox cajaMes;
+
+    @FXML
+    ComboBox cajaAno;
 
     @FXML
     TextField cuentaNuevaCedula;
