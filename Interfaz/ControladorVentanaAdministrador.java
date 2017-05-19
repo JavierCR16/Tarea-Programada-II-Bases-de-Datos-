@@ -6,6 +6,10 @@ import javafx.scene.control.*;
 import javafx.stage.Stage;
 
 import java.net.URL;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.ResourceBundle;
 
 /**
@@ -111,6 +115,9 @@ public class ControladorVentanaAdministrador implements Initializable {
     @FXML
     Button botonSuspenderUsuario;
 
+    public Connection connection;
+    public Statement statement;
+
 
 
 
@@ -134,9 +141,11 @@ public class ControladorVentanaAdministrador implements Initializable {
                 botonSesionNegociaciones.setText("Abrir Sesión");
             }
         });
+
         botonSuspenderUsuario.setOnAction(event -> {
             cuadroUsuarioASuspender.clear();
         });
+
         botonCerrarSesionAdmi.setOnAction(event -> {
             Stage escenarioActual = (Stage)botonCerrarSesionAdmi.getScene().getWindow();
             escenarioActual.close();
@@ -154,26 +163,40 @@ public class ControladorVentanaAdministrador implements Initializable {
         });
 
     }
+
     public void crearUsuarioAgente(){
-        String cedulaParticipante = cedulaCrearAgente.getText();
-        String nombreParticipante = nombreCrearAgente.getText();
-        String telefonoParticipante = telefonoCrearAgente.getText();
-        String correoParticipante = correoCrearAgente.getText();
+        String cedulaAgente = cedulaCrearAgente.getText();
+        String nombreAgente= nombreCrearAgente.getText();
+        String telefonoAgente = telefonoCrearAgente.getText();
+        String correoAgente = correoCrearAgente.getText();
         String palabraClave = contrasenaCrearAgente.getText();
         String confirmacionClave = confirmacionCrearAgente.getText();
 
         boolean datosIncorrectos = false;
 
-        if(cedulaParticipante.equals("") || nombreParticipante.equals("")||telefonoParticipante.equals("") || correoParticipante.equals("")
+        if(cedulaAgente.equals("") || nombreAgente.equals("")||telefonoAgente.equals("") || correoAgente.equals("")
                 || palabraClave.equals("") || confirmacionClave.equals(""))
-            llamarAlerta("Deben ingresarse todos los datos del participante");
+            llamarAlerta("Deben ingresarse todos los datos del Agente");
         else if(!palabraClave.equals(confirmacionClave))
             llamarAlerta("La clave seleccionada no coincide. Intente de nuevo");
         else{
-            //TODO PROCEDURE QUE AGREGUE PARTICIPANTES
+            //TODO PROCEDURE QUE AGREGUE Agentes
         }
 
+        botonSuspenderUsuario.setOnAction(event -> {
+           /* Se estaban probando los permisos con una cuenta X
+           try{
+                String insertarCedula = "INSERT INTO admi VALUES(?)";
+                PreparedStatement insert = connection.prepareStatement(insertarCedula);
+                insert.setString(1,"456546");
+                insert.executeUpdate();
+            }
+            catch(SQLException e){
+                e.printStackTrace();
+            }*/
+        });
     }
+
     public void llamarAlerta(String error){
         Alert alerta = new Alert(Alert.AlertType.WARNING);
         alerta.setTitle("Error");

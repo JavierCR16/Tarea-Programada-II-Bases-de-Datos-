@@ -69,13 +69,18 @@ public class ControladorVentanaCambiarContrasenna implements Initializable {
                 llamarAlerta("La nueva contraseña no coincide. Intente de nuevo");
 
             else{
-                // TODO Con un procedure hacer update de la contra del usuario
+                cambiarContrasenna(contraNueva);
+
             }
 
             limpiarPantalla();
 
         });
 
+    }
+
+    public void cambiarContrasenna(String contrasennaNueva){
+        // TODO Con un procedure hacer update de la contra del usuario
     }
 
     public void llamarAlerta(String error){

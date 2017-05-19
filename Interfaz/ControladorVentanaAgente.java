@@ -6,6 +6,10 @@ import javafx.scene.control.*;
 import javafx.stage.Stage;
 
 import java.net.URL;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.ResourceBundle;
 
 /**
@@ -70,6 +74,9 @@ public class ControladorVentanaAgente implements Initializable {
     @FXML
     TextField cuadroColonesRetiro;
 
+    Connection connection;
+    Statement statement;
+
 
 
     public void initialize(URL fxmlLocatios, ResourceBundle resources){
@@ -97,6 +104,17 @@ public class ControladorVentanaAgente implements Initializable {
             cuadroCedulaDeposito.clear();
             cuadroDolaresDeposito.clear();
             cuadroColonesDeposito.clear();
+            /*
+            Se estaban probando los permisos con una cuenta X
+            try{
+                String insertarCedula = "SELECT * FROM admi WHERE cedula =?";
+                PreparedStatement insert = connection.prepareStatement(insertarCedula);
+                insert.setString(1,"123");
+                insert.executeQuery();
+            }
+            catch(SQLException e){
+                e.printStackTrace();
+            }*/
         });
 
         botonRetirar.setOnAction(event -> {
@@ -116,15 +134,13 @@ public class ControladorVentanaAgente implements Initializable {
         String palabraClave = cuentaNuevaClave.getText();
         String confirmacionClave = cuentaNuevaConfirmacion.getText();
 
-        boolean datosIncorrectos = false;
-
         if(cedulaParticipante.equals("") || nombreParticipante.equals("")||telefonoParticipante.equals("") || correoParticipante.equals("")
                 || palabraClave.equals("") || confirmacionClave.equals(""))
             llamarAlerta("Deben ingresarse todos los datos del participante");
         else if(!palabraClave.equals(confirmacionClave))
             llamarAlerta("La clave seleccionada no coincide. Intente de nuevo");
         else{
-            //TODO PROCEDURE QUE AGREGUE PARTICIPANTES
+            //TODO PROCEDURE QUE AGREGUE USER PARTICIPANTES Y AGREGUE A LA TABLA PARTICIPANTES, TODO EN UNO SOLO
         }
 
     }

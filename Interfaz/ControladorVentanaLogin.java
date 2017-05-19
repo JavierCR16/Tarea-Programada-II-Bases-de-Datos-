@@ -131,12 +131,66 @@ public class ControladorVentanaLogin implements Initializable{
             connection = DriverManager.getConnection(connectionUrl);
             statement = connection.createStatement();
 
+
         } catch (ClassNotFoundException ex) {
             ex.printStackTrace();
         } catch (SQLException e) {
             e.printStackTrace();
         }
 
+    }
+
+    public boolean establecerConexionUsuarios(String username,String password){
+        Connection conexion = null;
+        Statement estado= null;
+        try{
+            Class.forName("com.microsoft.sqlserver.jdbc.SQLServerDriver");
+            String connectionUrl = "jdbc:sqlserver://localhost:1433;" + "databaseName=PrograBasesTransacciones;user="+username
+                    +";password="+password;
+            conexion = DriverManager.getConnection(connectionUrl);
+            estado = connection.createStatement();
+            return true;
+
+        }
+        catch(Exception e){
+            e.printStackTrace();
+        }
+        return false;
+
+    }
+
+    public Connection devolverConnection(String username, String password){
+        Connection conexion = null;
+        Statement estado = null;
+        try{
+            Class.forName("com.microsoft.sqlserver.jdbc.SQLServerDriver");
+            String connectionUrl = "jdbc:sqlserver://localhost:1433;" + "databaseName=PrograBasesTransacciones;user="+username
+                    +";password="+password;
+            conexion = DriverManager.getConnection(connectionUrl);
+            estado = conexion.createStatement();
+
+        }
+        catch(Exception e){
+            e.printStackTrace();
+        }
+        return conexion;
+    }
+
+    public Statement devolverStatement(String username, String password){
+        Connection conexion = null;
+        Statement estado = null;
+        try{
+            Class.forName("com.microsoft.sqlserver.jdbc.SQLServerDriver");
+            String connectionUrl = "jdbc:sqlserver://localhost:1433;" + "databaseName=PrograBasesTransacciones;user="+username
+                    +";password="+password;
+            conexion = DriverManager.getConnection(connectionUrl);
+            estado = conexion.createStatement();
+
+        }
+        catch(Exception e){
+            e.printStackTrace();
+        }
+        return estado;
     }
 
     public void abrirVentanaCambiarContrasenna(){
@@ -156,11 +210,14 @@ public class ControladorVentanaLogin implements Initializable{
 
     }
 
-    public void abrirVentanaAgente(){
+    public void abrirVentanaAgente(Connection connection, Statement statement){
 
         try{
             FXMLLoader loader = new FXMLLoader();
             Parent root = loader.load(getClass().getResource("VentanaAgente.fxml").openStream());
+            ControladorVentanaAgente controlador = loader.getController();
+            controlador.connection= connection;
+            controlador.statement = statement;
             Stage escenario = new Stage();
             escenario.setTitle("Agente");
             escenario.setScene(new Scene(root,1053,417));
@@ -171,25 +228,29 @@ public class ControladorVentanaLogin implements Initializable{
         }
 
     }
-    public void abrirVentanaParticipante(){
 
-        try{
-            FXMLLoader loader = new FXMLLoader();
-            Parent root = loader.load(getClass().getResource("VentanaParticipante.fxml").openStream());
-            Stage escenario = new Stage();
-            escenario.setTitle("Participante");
-            escenario.setScene(new Scene(root,1053,417));
-            escenario.show();
-        }
-        catch(Exception e){
-            e.printStackTrace();
-        }
+    public void abrirVentanaParticipante(Connection connection,Statement statement){
 
+            try{
+                FXMLLoader loader = new FXMLLoader();
+                Parent root = loader.load(getClass().getResource("VentanaParticipante.fxml").openStream());
+                Stage escenario = new Stage();
+                escenario.setTitle("Participante");
+                escenario.setScene(new Scene(root,1053,417));
+                escenario.show();
+            }
+            catch(Exception e){
+                e.printStackTrace();
+            }
     }
-    public void abrirVentanaAdministrador(){
+
+    public void abrirVentanaAdministrador(Connection connection, Statement statement){
         try{
             FXMLLoader loader = new FXMLLoader();
             Parent root = loader.load(getClass().getResource("VentanaAdministrador.fxml").openStream());
+            ControladorVentanaAdministrador controlador = loader.getController();
+            controlador.connection = connection;
+            controlador.statement = statement;
             Stage escenario = new Stage();
             escenario.setTitle("Administrador");
             escenario.setScene(new Scene(root,1275,440));
@@ -200,14 +261,6 @@ public class ControladorVentanaLogin implements Initializable{
         }
     }
 
-
-    public void llamarAlerta(String error){
-        Alert alerta = new Alert(Alert.AlertType.WARNING);
-        alerta.setTitle("Error");
-        alerta.setContentText(error);
-        alerta.showAndWait();
-    }
-
     public void ingresarComoAdministrador(){
         String usuarioAdmi = cuadroUsuarioAdministrador.getText();
         String contrasennaAdmi = cuadroContrasennaAdministrador.getText();
@@ -215,7 +268,18 @@ public class ControladorVentanaLogin implements Initializable{
         if(usuarioAdmi.equals("") || contrasennaAdmi.equals(""))
             llamarAlerta("Se deben ingresar todos los datos");
         else{
-            abrirVentanaAdministrador();
+            boolean existeUsuario = establecerConexionUsuarios(usuarioAdmi,contrasennaAdmi);
+         //   String esAdministrador = procedureBuscarLogin(1,usuarioAdmi); //si el query no devuelve nada, es null la variable
+
+
+            if(!existeUsuario ) //esAdministrador==null)
+                llamarAlerta("El usuario ingresado no existe o usted no tiene permisos como administrador");
+            else{
+                 Connection nuevaConexion = devolverConnection(usuarioAdmi,contrasennaAdmi);
+                 Statement nuevoEstado = devolverStatement(usuarioAdmi,contrasennaAdmi);
+                 abrirVentanaAdministrador(nuevaConexion,nuevoEstado);
+            }
+
             //TODO PROCEDURE QUE BUSQUE EL USUARIO, SI EXISTE ENTRAR A LA PANTALLA, SINO DISPARAR ALERTA GG IZY
         }
     }
@@ -226,9 +290,68 @@ public class ControladorVentanaLogin implements Initializable{
         if(usuarioAgente.equals("") || contrasennaAgente.equals(""))
             llamarAlerta("Se deben ingresar todos los datos");
         else{
-            abrirVentanaAgente();
-            //TODO PROCEDURE QUE BUSQUE EL USUARIO, SI EXISTE ENTRAR A LA PANTALLA, SINO DISPARAR ALERTA GG IZY
+
+            boolean existeUsuario = establecerConexionUsuarios(usuarioAgente,contrasennaAgente);
+            String esAgente = procedureBuscarLogin(2,usuarioAgente);
+
+
+            if(!existeUsuario || esAgente==null)
+                llamarAlerta("El usuario ingresado no existe o usted no tiene permisos como aGENTE");
+           else{
+                Connection nuevaConexion = devolverConnection(usuarioAgente,contrasennaAgente);
+                Statement nuevoEstado = devolverStatement(usuarioAgente,contrasennaAgente);
+                abrirVentanaAgente(nuevaConexion,nuevoEstado);
+            }
         }
+    }
+
+    public String procedureBuscarLogin(int opcion, String cedula){
+        String procedimiento = "";
+        String valorDevuelto = "";
+        switch (opcion){
+            //TODO HACER 3 PROCEDIMIENTOS QUE DEVUELVAN LA CEDULA EN CASO DE QUE ENCUENTREN ALGUN ADMI,AGENTE O PARTICIPANTE IZY
+            case 1: //Administrador
+                try {
+                    procedimiento = "{call existeAdministrador(?,?)}";
+                    CallableStatement procAdministrador = connection.prepareCall(procedimiento);
+                    procAdministrador.setString(1,cedula);
+                    procAdministrador.registerOutParameter(2, Types.VARCHAR);
+                    procAdministrador.executeUpdate();
+                    valorDevuelto = procAdministrador.getString(2);
+                }
+                catch (SQLException e){
+                    e.printStackTrace();
+                }
+                break;
+            case 2: //Agente
+                try {
+                    procedimiento = "{call existeAgente(?,?)}";
+                    CallableStatement procAgente = connection.prepareCall(procedimiento);
+                    procAgente.setString(1,cedula);
+                    procAgente.registerOutParameter(2, Types.VARCHAR);
+                    procAgente.executeUpdate();
+                    valorDevuelto = procAgente.getString(2);
+                }
+                catch (SQLException e){
+                    e.printStackTrace();
+                }
+                break;
+
+            case 3: //Participante
+                try {
+                    procedimiento = "{call existeParticipante(?,?)}";
+                    CallableStatement procParticipante = connection.prepareCall(procedimiento);
+                    procParticipante.setString(1,cedula);
+                    procParticipante.registerOutParameter(2, Types.VARCHAR);
+                    procParticipante.executeUpdate();
+                    valorDevuelto = procParticipante.getString(2);
+                }
+                catch (SQLException e){
+                    e.printStackTrace();
+                }
+                break;
+        }
+        return valorDevuelto;
     }
 
     public void ingresarComoParticipante(){
@@ -238,18 +361,31 @@ public class ControladorVentanaLogin implements Initializable{
         if(usuarioParticipante.equals("") || contrasennaParticipante.equals(""))
             llamarAlerta("Se deben ingresar todos los datos");
         else{
-            abrirVentanaParticipante();
-            try{//Era de prueba para ver que extrai xdxdxd
+
+            boolean existeUsuario = establecerConexionUsuarios(usuarioParticipante,contrasennaParticipante);
+            String esParticipante = procedureBuscarLogin(2,usuarioParticipante);
+
+
+            if(!existeUsuario || esParticipante==null)
+                llamarAlerta("El usuario ingresado no existe, fue suspendido o usted no tiene permisos como Participante");
+
+            else{
+                Connection nuevaConexion = devolverConnection(usuarioParticipante,contrasennaParticipante);
+                Statement nuevoEstado = devolverStatement(usuarioParticipante,contrasennaParticipante);
+                abrirVentanaParticipante(nuevaConexion,nuevoEstado);
+            }
+
+       /*     try{//Era de prueba para ver que extrai xdxdxd
                 String procedimiento = "{call caca(?)}";
                 CallableStatement ejecutarProcPrueba = connection.prepareCall(procedimiento);
-                ejecutarProcPrueba.registerOutParameter(1, Types.INTEGER);
+                ejecutarProcPrueba.registerOutParameter(1, Types.VARCHAR);
                 ejecutarProcPrueba.executeUpdate();
-                String edad = String.valueOf(ejecutarProcPrueba.getInt(1));
+                String edad = String.valueOf(ejecutarProcPrueba.getString(1));
                 System.out.println("La edad extraida del procedimiento es: "+edad);
             }
             catch(SQLException e){
                 e.printStackTrace();
-            }
+            }*/
             //TODO PROCEDURE QUE BUSQUE EL USUARIO, SI EXISTE ENTRAR A LA PANTALLA, SINO DISPARAR ALERTA GG IZY
         }
     }
@@ -261,6 +397,13 @@ public class ControladorVentanaLogin implements Initializable{
         cuadroContrasennaParticipante.clear();
         cuadroContrasennaAgente.clear();
         cuadroContrasennaAdministrador.clear();
+    }
+
+    public void llamarAlerta(String error){
+        Alert alerta = new Alert(Alert.AlertType.WARNING);
+        alerta.setTitle("Error");
+        alerta.setContentText(error);
+        alerta.showAndWait();
     }
 
 

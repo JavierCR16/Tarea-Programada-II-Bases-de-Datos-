@@ -9,6 +9,8 @@ import javafx.scene.control.TextField;
 import javafx.stage.Stage;
 
 import java.net.URL;
+import java.sql.Connection;
+import java.sql.Statement;
 import java.util.ResourceBundle;
 
 /**
@@ -46,14 +48,19 @@ public class ControladorVentanaParticipante implements Initializable {
     @FXML
     Button botonCerrarSesion;
 
+    public Connection conexion;
+    public Statement statement;
+
     public void initialize(URL fxmlLocations, ResourceBundle resources){
 
         botonCerrarSesion.setOnAction(event -> {
             Stage escenarioActual = (Stage)botonCerrarSesion.getScene().getWindow();
             escenarioActual.close();
         });
+
         cajaTipoMoneda.getItems().addAll("Dolares","Colones");
         cajaTipoOferta.getItems().addAll("Compra","Venta");
+
         botonEnviarOferta.setOnAction(event -> {
             montoOferta.clear();
             tipoCambioOferta.clear();
