@@ -64,6 +64,8 @@ public class ControladorVentanaParticipante implements Initializable {
         botonEnviarOferta.setOnAction(event -> {
             montoOferta.clear();
             tipoCambioOferta.clear();
+            cajaTipoOferta.getSelectionModel().clearSelection();
+            cajaTipoMoneda.getSelectionModel().clearSelection();
         });
     }
 }

@@ -140,7 +140,7 @@ public class ControladorVentanaLogin implements Initializable{
 
     }
 
-    public boolean establecerConexionUsuarios(String username,String password){
+    public boolean existeConexionUsuarios(String username,String password){
         Connection conexion = null;
         Statement estado= null;
         try{
@@ -268,11 +268,11 @@ public class ControladorVentanaLogin implements Initializable{
         if(usuarioAdmi.equals("") || contrasennaAdmi.equals(""))
             llamarAlerta("Se deben ingresar todos los datos");
         else{
-            boolean existeUsuario = establecerConexionUsuarios(usuarioAdmi,contrasennaAdmi);
-         //   String esAdministrador = procedureBuscarLogin(1,usuarioAdmi); //si el query no devuelve nada, es null la variable
+            boolean existeUsuario = existeConexionUsuarios(usuarioAdmi,contrasennaAdmi);
+            String esAdministrador = procedureBuscarLogin(1,usuarioAdmi); //si el query no devuelve nada, es null la variable
 
 
-            if(!existeUsuario ) //esAdministrador==null)
+            if(!existeUsuario ||esAdministrador==null)
                 llamarAlerta("El usuario ingresado no existe o usted no tiene permisos como administrador");
             else{
                  Connection nuevaConexion = devolverConnection(usuarioAdmi,contrasennaAdmi);
@@ -280,7 +280,6 @@ public class ControladorVentanaLogin implements Initializable{
                  abrirVentanaAdministrador(nuevaConexion,nuevoEstado);
             }
 
-            //TODO PROCEDURE QUE BUSQUE EL USUARIO, SI EXISTE ENTRAR A LA PANTALLA, SINO DISPARAR ALERTA GG IZY
         }
     }
 
@@ -291,12 +290,12 @@ public class ControladorVentanaLogin implements Initializable{
             llamarAlerta("Se deben ingresar todos los datos");
         else{
 
-            boolean existeUsuario = establecerConexionUsuarios(usuarioAgente,contrasennaAgente);
+            boolean existeUsuario = existeConexionUsuarios(usuarioAgente,contrasennaAgente);
             String esAgente = procedureBuscarLogin(2,usuarioAgente);
 
 
             if(!existeUsuario || esAgente==null)
-                llamarAlerta("El usuario ingresado no existe o usted no tiene permisos como aGENTE");
+                llamarAlerta("El usuario ingresado no existe o usted no tiene permisos como Agente");
            else{
                 Connection nuevaConexion = devolverConnection(usuarioAgente,contrasennaAgente);
                 Statement nuevoEstado = devolverStatement(usuarioAgente,contrasennaAgente);
@@ -309,7 +308,6 @@ public class ControladorVentanaLogin implements Initializable{
         String procedimiento = "";
         String valorDevuelto = "";
         switch (opcion){
-            //TODO HACER 3 PROCEDIMIENTOS QUE DEVUELVAN LA CEDULA EN CASO DE QUE ENCUENTREN ALGUN ADMI,AGENTE O PARTICIPANTE IZY
             case 1: //Administrador
                 try {
                     procedimiento = "{call existeAdministrador(?,?)}";
@@ -361,8 +359,7 @@ public class ControladorVentanaLogin implements Initializable{
         if(usuarioParticipante.equals("") || contrasennaParticipante.equals(""))
             llamarAlerta("Se deben ingresar todos los datos");
         else{
-
-            boolean existeUsuario = establecerConexionUsuarios(usuarioParticipante,contrasennaParticipante);
+            boolean existeUsuario = existeConexionUsuarios(usuarioParticipante,contrasennaParticipante);
             String esParticipante = procedureBuscarLogin(2,usuarioParticipante);
 
 
