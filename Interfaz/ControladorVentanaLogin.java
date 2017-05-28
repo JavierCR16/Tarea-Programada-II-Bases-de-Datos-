@@ -220,7 +220,7 @@ public class ControladorVentanaLogin implements Initializable{
             controlador.statement = statement;
             Stage escenario = new Stage();
             escenario.setTitle("Agente");
-            escenario.setScene(new Scene(root,1053,417));
+            escenario.setScene(new Scene(root,1053,445));
             escenario.show();
         }
         catch(Exception e){
@@ -360,7 +360,7 @@ public class ControladorVentanaLogin implements Initializable{
             llamarAlerta("Se deben ingresar todos los datos");
         else{
             boolean existeUsuario = existeConexionUsuarios(usuarioParticipante,contrasennaParticipante);
-            String esParticipante = procedureBuscarLogin(2,usuarioParticipante);
+            String esParticipante = procedureBuscarLogin(3,usuarioParticipante);
 
 
             if(!existeUsuario || esParticipante==null)
@@ -383,7 +383,6 @@ public class ControladorVentanaLogin implements Initializable{
             catch(SQLException e){
                 e.printStackTrace();
             }*/
-            //TODO PROCEDURE QUE BUSQUE EL USUARIO, SI EXISTE ENTRAR A LA PANTALLA, SINO DISPARAR ALERTA GG IZY
         }
     }
 

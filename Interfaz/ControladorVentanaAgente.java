@@ -6,10 +6,7 @@ import javafx.scene.control.*;
 import javafx.stage.Stage;
 
 import java.net.URL;
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.SQLException;
-import java.sql.Statement;
+import java.sql.*;
 import java.util.ResourceBundle;
 
 /**
@@ -82,6 +79,8 @@ public class ControladorVentanaAgente implements Initializable {
     public void initialize(URL fxmlLocatios, ResourceBundle resources){
 
 
+        setDatosDefecto();
+
         botonCerrarSesion.setOnAction(event -> {
 
             Stage escenarioActual = (Stage)botonCerrarSesion.getScene().getWindow();
@@ -96,6 +95,9 @@ public class ControladorVentanaAgente implements Initializable {
             cuentaNuevaCorreo.clear();
             cuentaNuevaClave.clear();
             cuentaNuevaConfirmacion.clear();
+            cajaAno.getSelectionModel().clearSelection();
+            cajaMes.getSelectionModel().clearSelection();
+            cajaDia.getSelectionModel().clearSelection();
 
         });
 
@@ -126,6 +128,26 @@ public class ControladorVentanaAgente implements Initializable {
 
     }
 
+    public void setDatosDefecto(){
+        for (int i = 68; i > 0; i--) {
+            cajaAno.getItems().add(68 - i, (i + 1950));
+        }
+
+        for(int i=1;i<13;i++){
+            if(i<10)
+                cajaMes.getItems().add(i-1,"0"+i);
+            else
+                cajaMes.getItems().add(i-1,i);
+        }
+
+        for (int i = 1; i < 32; i++) {
+            if(i<10)
+                cajaDia.getItems().add(i-1,"0"+i);
+            else
+                cajaDia.getItems().add(i-1,i);
+        }
+    }
+
     public void crearUsuarioParticipante(){
         String cedulaParticipante = cuentaNuevaCedula.getText();
         String nombreParticipante = cuentaNuevaNombre.getText();
@@ -133,6 +155,9 @@ public class ControladorVentanaAgente implements Initializable {
         String correoParticipante = cuentaNuevaCorreo.getText();
         String palabraClave = cuentaNuevaClave.getText();
         String confirmacionClave = cuentaNuevaConfirmacion.getText();
+        Object annoNacimiento = cajaAno.getSelectionModel().getSelectedItem();
+        Object mesNacimiento = cajaMes.getSelectionModel().getSelectedItem();
+        Object diaNacimiento = cajaDia.getSelectionModel().getSelectedItem();
 
         if(cedulaParticipante.equals("") || nombreParticipante.equals("")||telefonoParticipante.equals("") || correoParticipante.equals("")
                 || palabraClave.equals("") || confirmacionClave.equals(""))
@@ -140,7 +165,34 @@ public class ControladorVentanaAgente implements Initializable {
         else if(!palabraClave.equals(confirmacionClave))
             llamarAlerta("La clave seleccionada no coincide. Intente de nuevo");
         else{
-            //TODO PROCEDURE QUE AGREGUE USER PARTICIPANTES Y AGREGUE A LA TABLA PARTICIPANTES, TODO EN UNO SOLO
+            try{
+                Integer.parseInt(cedulaParticipante);
+
+                String fechaNacimiento = annoNacimiento.toString()+"/"+mesNacimiento.toString()+"/"+diaNacimiento.toString();
+                java.util.Date miFecha = new java.util.Date(fechaNacimiento);
+                java.sql.Date sqlDate = new java.sql.Date(miFecha.getTime());
+
+                String procedimientoInsertarParticipante = "{call crearLoginParaParticipante(?,?)}"; // TODO EDITAR PARA PONER PERMISOS, QUE BASE USAR(PROGRABASES...)
+                String procedimientoInsertarUsuarioParticipante = "{call insertarParticipante(?,?,?,?,?)}";
+
+                CallableStatement ejecutarProcedimiento = connection.prepareCall(procedimientoInsertarParticipante);
+                ejecutarProcedimiento.setString(1,cedulaParticipante);
+                ejecutarProcedimiento.setString(2,palabraClave);
+                ejecutarProcedimiento.executeUpdate();
+
+
+                CallableStatement ejecutarProcedimientoInsercion = connection.prepareCall(procedimientoInsertarUsuarioParticipante);
+                ejecutarProcedimientoInsercion.setString(1,cedulaParticipante);
+                ejecutarProcedimientoInsercion.setString(2,nombreParticipante);
+                ejecutarProcedimientoInsercion.setString(3,cedulaParticipante);
+                ejecutarProcedimientoInsercion.setString(4,telefonoParticipante);
+                ejecutarProcedimientoInsercion.setDate(5,sqlDate);
+                ejecutarProcedimientoInsercion.executeUpdate();
+            }
+            catch(Exception e){
+                e.printStackTrace();
+                llamarAlerta("El participante ingresado ya existe o hubo un error en los datos ingresados. Intente de nuevo");
+            }
         }
 
     }

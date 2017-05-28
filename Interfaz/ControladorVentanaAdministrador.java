@@ -68,10 +68,10 @@ public class ControladorVentanaAdministrador implements Initializable {
     Label totalVentaDolares;
 
     @FXML
-    TextField contrasenaCrearAgente;
+    PasswordField contrasenaCrearAgente;
 
     @FXML
-    TextField confirmacionCrearAgente;
+    PasswordField confirmacionCrearAgente;
 
     @FXML
     TableView tablaUsuariosListados;
@@ -219,7 +219,7 @@ public class ControladorVentanaAdministrador implements Initializable {
                 java.util.Date miFecha = new java.util.Date(fechaNacimiento);
                 java.sql.Date sqlDate = new java.sql.Date(miFecha.getTime());
 
-                String procedimientoInsertarAgente = "{call crearLoginParaAgente(?,?)}"; // TODO EDITAR PARA PONER PERMISOS, QUE BASE USAR, y poder otorgarle el rol sysadmin para que pueda crear logins el agente.
+                String procedimientoInsertarAgente = "{call crearLoginParaAgente(?,?)}"; // TODO EDITAR PARA PONER PERMISOS(USAR EXECUTE), QUE BASE USAR, y poder otorgarle el rol sysadmin para que pueda crear logins el agente.
                 String procedimientoInsertarUsuarioAgente = "{call insertarAgente(?,?,?,?,?)}";
 
                 CallableStatement ejecutarProcedimiento = connection.prepareCall(procedimientoInsertarAgente);
