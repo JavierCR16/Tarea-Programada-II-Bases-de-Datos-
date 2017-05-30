@@ -86,9 +86,20 @@ public class ControladorVentanaLogin implements Initializable{
             if(cuadroUsuarioAdministrador.getText().equals("") || cuadroContrasennaAdministrador.getText().equals(""))
                 llamarAlerta("Se debe ingresar todos los datos para poder cambiar la contraseña");
             else{
-                //TODO Hacer procedure que extraiga una contrasenna dado el usuario.
-                abrirVentanaCambiarContrasenna();//Mandar por parametro la contrasena y el usuario
+                String usuarioAdministrador = cuadroUsuarioAdministrador.getText();
+                String contrasennaAdministrador = cuadroContrasennaAdministrador.getText();
+                boolean existeUsuario = existeConexionUsuarios(usuarioAdministrador,contrasennaAdministrador);
+                String esAdministrador = procedureBuscarLogin(1,usuarioAdministrador);
+
+                if(!existeUsuario || esAdministrador==null)
+                    llamarAlerta("El usuario ingresado no existe o usted no tiene permisos como Administrador. Debe ingresar un usuario valido para poder cambiar la contraseña");
+                else {
+                    Connection nuevaConexion = devolverConnection(usuarioAdministrador,contrasennaAdministrador);
+                    Statement nuevoEstado = devolverStatement(usuarioAdministrador,contrasennaAdministrador);
+                    abrirVentanaCambiarContrasenna(nuevaConexion,nuevoEstado,usuarioAdministrador,contrasennaAdministrador);
+                }
             }
+            limpiarPantallaLogin();
 
         });
 
@@ -98,9 +109,21 @@ public class ControladorVentanaLogin implements Initializable{
                 llamarAlerta("Se debe ingresar todos los datos para poder cambiar la contraseña");
 
             else{
-                //TODO Hacer procedure que extraiga una contrasenna dado el usuario.
-                abrirVentanaCambiarContrasenna();//Mandar por parametro la contrasena
+
+                String usuarioAgente = cuadroUsuarioAgente.getText();
+                String contrasennaAgente = cuadroContrasennaAgente.getText();
+                boolean existeUsuario = existeConexionUsuarios(usuarioAgente,contrasennaAgente);
+                String esAgente = procedureBuscarLogin(2,usuarioAgente);
+
+                if(!existeUsuario || esAgente==null)
+                    llamarAlerta("El usuario ingresado no existe o usted no tiene permisos como Agente. Debe ingresar un usuario valido para poder cambiar la contraseña");
+                else {
+                    Connection nuevaConexion = devolverConnection(usuarioAgente,contrasennaAgente);
+                    Statement nuevoEstado = devolverStatement(usuarioAgente,contrasennaAgente);
+                    abrirVentanaCambiarContrasenna(nuevaConexion,nuevoEstado,usuarioAgente,contrasennaAgente);
+                }
             }
+            limpiarPantallaLogin();
 
         });
 
@@ -193,11 +216,16 @@ public class ControladorVentanaLogin implements Initializable{
         return estado;
     }
 
-    public void abrirVentanaCambiarContrasenna(){
+    public void abrirVentanaCambiarContrasenna(Connection conexion, Statement estado,String usuario,String contrasennaAnterior){
 
         try{
             FXMLLoader loader = new FXMLLoader();
             Parent root = loader.load(getClass().getResource("VentanaCambiarContrasenna.fxml").openStream());
+            ControladorVentanaCambiarContrasenna controladorContrasenna = loader.getController();
+            controladorContrasenna.contrasennaAnteriorUsuario = contrasennaAnterior;
+            controladorContrasenna.loginACambiar=usuario;
+            controladorContrasenna.connection = conexion;
+            controladorContrasenna.statement = estado;
             Stage escenario = new Stage();
             escenario.setTitle("Contraseña");
             escenario.setScene(new Scene(root,498,354));

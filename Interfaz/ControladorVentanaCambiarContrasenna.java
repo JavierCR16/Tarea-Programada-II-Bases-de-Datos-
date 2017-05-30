@@ -2,12 +2,18 @@ package Interfaz;
 
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.PasswordField;
+import javafx.stage.Stage;
 
 import java.net.URL;
+import java.sql.CallableStatement;
+import java.sql.Connection;
+import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.ResourceBundle;
 
 /**
@@ -33,7 +39,11 @@ public class ControladorVentanaCambiarContrasenna implements Initializable {
     @FXML
     Button botonCambiarContrasenna;
 
-    String contrasennaAnteriorUsuario;  //Esto para que el mae solo pueda cambiar la contraseña de el y no la de otros.
+    Connection connection;
+    Statement statement;
+
+    String contrasennaAnteriorUsuario;  //Esto para que el mae solo pueda cambiar la contraseña de el y no la de otros.'
+    String loginACambiar;
 
 
     public void initialize(URL fxmlLocations, ResourceBundle resources){
@@ -70,6 +80,8 @@ public class ControladorVentanaCambiarContrasenna implements Initializable {
 
             else{
                 cambiarContrasenna(contraNueva);
+                Stage escenario = (Stage)botonCambiarContrasenna.getScene().getWindow();
+                escenario.close();
 
             }
 
@@ -80,7 +92,18 @@ public class ControladorVentanaCambiarContrasenna implements Initializable {
     }
 
     public void cambiarContrasenna(String contrasennaNueva){
-        // TODO Con un procedure hacer update de la contra del usuario
+        try{
+            String procCambiarContrasenna = "{call cambiarContrasenna(?,?,?)}";
+            CallableStatement procedimientoCambiarContra = connection.prepareCall(procCambiarContrasenna);
+            procedimientoCambiarContra.setString(1,loginACambiar);
+            procedimientoCambiarContra.setString(2,contrasennaNueva);
+            procedimientoCambiarContra.setString(3,contrasennaAnteriorUsuario);
+            procedimientoCambiarContra.executeUpdate();
+        }
+        catch(SQLException e){
+            e.printStackTrace();
+            llamarAlerta("Hubo un error al cambiar la contraseña. Intente de nuevo");
+        }
     }
 
     public void llamarAlerta(String error){
