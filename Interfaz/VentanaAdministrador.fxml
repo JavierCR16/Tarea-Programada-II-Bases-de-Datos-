@@ -184,7 +184,7 @@
                   </Label>
                   <Separator layoutX="17.0" layoutY="170.0" prefHeight="5.0" prefWidth="559.0" />
                   <Separator layoutX="323.0" layoutY="196.0" orientation="VERTICAL" prefHeight="201.0" prefWidth="0.0" />
-                  <Button fx:id="botonSesionNegociaciones" layoutX="408.0" layoutY="273.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="110.0" text="Abrir Sesión" />
+                  <Button fx:id="botonAbrirSesion" layoutX="408.0" layoutY="273.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="110.0" text="Abrir Sesión" />
                   <Label layoutX="609.0" layoutY="220.0" text="Contraseña:">
                      <font>
                         <Font name="Arial Rounded MT Bold" size="13.0" />
@@ -195,6 +195,7 @@
                      </font></Label>
                   <PasswordField fx:id="contrasenaCrearAgente" layoutX="689.0" layoutY="216.0" />
                   <PasswordField fx:id="confirmacionCrearAgente" layoutX="689.0" layoutY="252.0" />
+                  <Button fx:id="botonCerrarSesion" layoutX="408.0" layoutY="309.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="110.0" text="Cerrar Sesión" />
                </children></AnchorPane>
       </content>
     </Tab>

@@ -5,6 +5,8 @@ import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.*;
 import javafx.stage.Stage;
+import jdk.nashorn.internal.codegen.CompilerConstants;
+import sun.util.resources.cldr.vai.CalendarData_vai_Latn_LR;
 
 import java.net.URL;
 import java.sql.*;
@@ -32,7 +34,10 @@ public class ControladorVentanaAdministrador implements Initializable {
     Button botonEstablecerPorcentaje;
 
     @FXML
-    Button botonSesionNegociaciones;
+    Button botonAbrirSesion;
+
+    @FXML
+    Button botonCerrarSesion;
 
     @FXML
     TextField cedulaCrearAgente;
@@ -118,6 +123,8 @@ public class ControladorVentanaAdministrador implements Initializable {
     public Connection connection;
     public Statement statement;
 
+    public String administradorActual;
+
 
 
 
@@ -125,12 +132,12 @@ public class ControladorVentanaAdministrador implements Initializable {
 
         setDatosDefecto();
 
-        botonSesionNegociaciones.setOnAction(event -> {
-            if (botonSesionNegociaciones.getText().equals("Abrir Sesión")) {
-                botonSesionNegociaciones.setText("Cerrar Sesión");
-            } else {
-                botonSesionNegociaciones.setText("Abrir Sesión");
-            }
+        botonAbrirSesion.setOnAction(event -> {
+           abrirSesion();
+        });
+
+        botonCerrarSesion.setOnAction(event -> {
+            cerrarSesion();
         });
 
         botonSuspenderUsuario.setOnAction(event -> {
@@ -168,6 +175,36 @@ public class ControladorVentanaAdministrador implements Initializable {
         });
 
 
+    }
+
+    public void abrirSesion(){
+
+        try{
+            String abrirSesion = "{call abrirCerrarSesion(?,?)}";
+            CallableStatement procedimientoSesion  = connection.prepareCall(abrirSesion);
+            procedimientoSesion.setString(1,administradorActual);
+            procedimientoSesion.setString(2,"ABRIR");
+            procedimientoSesion.executeUpdate();
+        }
+        catch(SQLException e){
+           // e.printStackTrace();
+            llamarAlerta("Ya se encuentra una sesion abierta. Intente más tarde");
+        }
+
+    }
+
+    public void cerrarSesion(){
+        try{
+            String cerrarSesion = "{call abrirCerrarSesion(?,?)}";
+            CallableStatement procedimientoSesion  = connection.prepareCall(cerrarSesion);
+            procedimientoSesion.setString(1,administradorActual);
+            procedimientoSesion.setString(2,"CERRAR");
+            procedimientoSesion.executeUpdate();
+        }
+        catch(SQLException e){
+//            e.printStackTrace();
+            llamarAlerta("No hay ninguna sesion para cerrar. Intente más tarde");
+        }
     }
 
     public void setDatosDefecto(){

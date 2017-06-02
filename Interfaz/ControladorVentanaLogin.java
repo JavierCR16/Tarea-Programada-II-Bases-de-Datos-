@@ -272,13 +272,14 @@ public class ControladorVentanaLogin implements Initializable{
             }
     }
 
-    public void abrirVentanaAdministrador(Connection connection, Statement statement){
+    public void abrirVentanaAdministrador(Connection connection, Statement statement,String usuarioActual){
         try{
             FXMLLoader loader = new FXMLLoader();
             Parent root = loader.load(getClass().getResource("VentanaAdministrador.fxml").openStream());
             ControladorVentanaAdministrador controlador = loader.getController();
             controlador.connection = connection;
             controlador.statement = statement;
+            controlador.administradorActual = usuarioActual;
             Stage escenario = new Stage();
             escenario.setTitle("Administrador");
             escenario.setScene(new Scene(root,1275,440));
@@ -305,7 +306,7 @@ public class ControladorVentanaLogin implements Initializable{
             else{
                  Connection nuevaConexion = devolverConnection(usuarioAdmi,contrasennaAdmi);
                  Statement nuevoEstado = devolverStatement(usuarioAdmi,contrasennaAdmi);
-                 abrirVentanaAdministrador(nuevaConexion,nuevoEstado);
+                 abrirVentanaAdministrador(nuevaConexion,nuevoEstado,usuarioAdmi);
             }
 
         }
