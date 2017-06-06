@@ -1,10 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import java.lang.*?>
 <?import javafx.scene.text.*?>
-
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
-
 
 <AnchorPane prefHeight="417.0" prefWidth="1053.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Interfaz.ControladorVentanaParticipante">
    <children>
@@ -73,6 +72,7 @@
             </TableView>
             <Button fx:id="botonActualizarUltimasTransConc" layoutX="675.0" layoutY="339.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="86.0" text="Actualizar" />
             <Button fx:id="botonCerrarSesion" layoutX="916.0" layoutY="339.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="108.0" text="Cerrar Sesion" />
+            <Button fx:id="botonNegociar" layoutX="480.0" layoutY="339.0" mnemonicParsing="false" text="Negociar" />
          </children>
       </Pane>
    </children>

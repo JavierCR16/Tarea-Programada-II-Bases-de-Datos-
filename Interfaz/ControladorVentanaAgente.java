@@ -5,6 +5,7 @@ import javafx.fxml.Initializable;
 import javafx.scene.control.*;
 import javafx.stage.Stage;
 
+import java.math.BigDecimal;
 import java.net.URL;
 import java.sql.*;
 import java.util.ResourceBundle;
@@ -74,6 +75,8 @@ public class ControladorVentanaAgente implements Initializable {
     Connection connection;
     Statement statement;
 
+    String agenteActual;
+
 
 
     public void initialize(URL fxmlLocatios, ResourceBundle resources){
@@ -128,6 +131,25 @@ public class ControladorVentanaAgente implements Initializable {
 
     }
 
+    public boolean estaSuspendido(String cedulaParticipante){
+        String valorDevuelto="";
+        try {
+
+            String procedimiento = "{call existeParticipante(?,?)}";
+            CallableStatement procParticipante = connection.prepareCall(procedimiento);
+            procParticipante.setString(1,cedulaParticipante);
+            procParticipante.registerOutParameter(2, Types.VARCHAR);
+            procParticipante.executeUpdate();
+            valorDevuelto = procParticipante.getString(2);
+        }
+        catch (SQLException e){
+            e.printStackTrace();
+        }
+        if(valorDevuelto==null)
+            return true;
+        return false;
+    }
+
     public void setDatosDefecto(){
         for (int i = 68; i > 0; i--) {
             cajaAno.getItems().add(68 - i, (i + 1950));
@@ -173,7 +195,7 @@ public class ControladorVentanaAgente implements Initializable {
                 java.sql.Date sqlDate = new java.sql.Date(miFecha.getTime());
 
                 String procedimientoInsertarParticipante = "{call crearLoginParaParticipante(?,?)}"; // TODO EDITAR PARA PONER PERMISOS, QUE BASE USAR(PROGRABASES...)
-                String procedimientoInsertarUsuarioParticipante = "{call insertarParticipante(?,?,?,?,?)}";
+                String procedimientoInsertarUsuarioParticipante = "{call insertarParticipante(?,?,?,?,?,?)}";
 
                 CallableStatement ejecutarProcedimiento = connection.prepareCall(procedimientoInsertarParticipante);
                 ejecutarProcedimiento.setString(1,cedulaParticipante);
@@ -187,6 +209,7 @@ public class ControladorVentanaAgente implements Initializable {
                 ejecutarProcedimientoInsercion.setString(3,cedulaParticipante);
                 ejecutarProcedimientoInsercion.setString(4,telefonoParticipante);
                 ejecutarProcedimientoInsercion.setDate(5,sqlDate);
+                ejecutarProcedimientoInsercion.setString(6,agenteActual);
                 ejecutarProcedimientoInsercion.executeUpdate();
             }
             catch(Exception e){
@@ -197,28 +220,50 @@ public class ControladorVentanaAgente implements Initializable {
 
     }
 
-    public void realizarDeposito(){
+    public void realizarDeposito() {
         String cedulaADepositar = cuadroCedulaDeposito.getText();
         String dolaresADepositar = cuadroDolaresDeposito.getText();
         String colonesADepositar = cuadroColonesDeposito.getText();
+        boolean isSuspended = estaSuspendido(cedulaADepositar);
 
-        if(cedulaADepositar.equals(""))
+        if (cedulaADepositar.equals(""))
             llamarAlerta("Debe ingresarse la cédula para realizar un depósito");
-        else{
-            //TODO PROCEDURE QUE DEPOSITE Y SI EN ALGUNA DE LAS VARAS NO SE MANDA NADA ENTONCES MAMELUCO NO PASA NADA
-        }
 
+        else if(isSuspended)
+            llamarAlerta("La cuenta seleccionada no corresponde a la de un participante o no existe.");
+        else if (dolaresADepositar.equals("") && colonesADepositar.equals(""))
+            llamarAlerta("Debe ingresar alguna cantidad para depositar.");
+        else {
+            if (dolaresADepositar.equals("") && !colonesADepositar.equals("")) {
+                ejecutarDepositoRetiro(cedulaADepositar, 2, colonesADepositar, "0",false);
+            }
+            else if(!dolaresADepositar.equals("") && colonesADepositar.equals(""))
+                ejecutarDepositoRetiro(cedulaADepositar, 5, "0", dolaresADepositar,false);
+            else {
+                ejecutarDepositoRetiro(cedulaADepositar, 4, colonesADepositar, dolaresADepositar,false);
+            }
+        }
     }
 
     public void realizarRetiro(){
         String cedulaARetirar = cuadroCedulaRetiro.getText();
         String dolaresARetirar = cuadroDolaresRetiro.getText();
         String colonesARetirar = cuadroColonesRetiro.getText();
+        boolean isSuspended = estaSuspendido(cedulaARetirar);
 
         if(cedulaARetirar.equals(""))
             llamarAlerta("Debe ingresarse la cédula para realizar un depósito");
+        else if(isSuspended)
+            llamarAlerta("La cuenta seleccionada no corresponde a la de un participante o no existe.");
+        else if(dolaresARetirar.equals("") && colonesARetirar.equals(""))
+            llamarAlerta("Debe ingresar alguna cantidad para retirar");
         else{
-            //TODO PROCEDURE QUE RETIRE Y SI EN ALGUNA DE LAS VARAS NO SE MANDA NADA ENTONCES MAMELUCO NO PASA NADA
+            if(dolaresARetirar.equals("") && !colonesARetirar.equals(""))
+                ejecutarDepositoRetiro(cedulaARetirar,3,colonesARetirar,"0",true);
+            else if(!dolaresARetirar.equals("") && colonesARetirar.equals(""))
+                ejecutarDepositoRetiro(cedulaARetirar,6,"0",dolaresARetirar,true);
+            else
+                ejecutarDepositoRetiro(cedulaARetirar,7,colonesARetirar,dolaresARetirar,true);
         }
 
     }
@@ -228,6 +273,27 @@ public class ControladorVentanaAgente implements Initializable {
         alerta.setTitle("Error");
         alerta.setContentText(error);
         alerta.showAndWait();
+    }
+
+    public void ejecutarDepositoRetiro(String cedulaParticipante, int opcionProcedimiento,String dineroColones, String dineroDolares,boolean esRetiro){
+        try{
+
+            String actualizarCuenta = "{call actualizacionEnCuentaMonetaria(?,?,?,?,?)}";
+            CallableStatement ejecutarActualizacionCuenta = connection.prepareCall(actualizarCuenta);
+            ejecutarActualizacionCuenta.setString(1,cedulaParticipante);
+            ejecutarActualizacionCuenta.setString(2,agenteActual);
+            ejecutarActualizacionCuenta.setBigDecimal(3, new BigDecimal(dineroColones));
+            ejecutarActualizacionCuenta.setBigDecimal(4,new BigDecimal(dineroDolares));
+            ejecutarActualizacionCuenta.setInt(5,opcionProcedimiento);
+            ejecutarActualizacionCuenta.executeUpdate();
+        }
+        catch(SQLException e){
+            e.printStackTrace();
+            if(esRetiro)
+                llamarAlerta("Fondos Insuficientes. Intente de nuevo.");
+            else
+                llamarAlerta("Error al depositar. Intente de nuevo.");
+        }
     }
 
 }

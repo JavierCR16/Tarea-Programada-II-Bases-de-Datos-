@@ -1,9 +1,14 @@
 package Interfaz;
 
+import Auxiliares.Usuario;
 import com.sun.org.apache.xpath.internal.SourceTree;
+import com.sun.xml.internal.bind.v2.runtime.property.PropertyFactory;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.*;
+import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.stage.Stage;
 import jdk.nashorn.internal.codegen.CompilerConstants;
 import sun.util.resources.cldr.vai.CalendarData_vai_Latn_LR;
@@ -132,6 +137,8 @@ public class ControladorVentanaAdministrador implements Initializable {
 
         setDatosDefecto();
 
+        configurarTablas();
+
         botonAbrirSesion.setOnAction(event -> {
            abrirSesion();
         });
@@ -172,6 +179,10 @@ public class ControladorVentanaAdministrador implements Initializable {
         botonEstablecerPorcentaje.setOnAction(event -> {
             establecerPorcentajeComision();
             cajaPorcentajeComision.getSelectionModel().clearSelection();
+        });
+
+        botonListarUsuarios.setOnAction(event -> {
+            listarUsuarios();
         });
 
 
@@ -273,7 +284,6 @@ public class ControladorVentanaAdministrador implements Initializable {
                 ejecutarProcedimientoInsercion.setDate(5,sqlDate);
                 ejecutarProcedimientoInsercion.executeUpdate();
 
-
             }
             catch(Exception e){
                 e.printStackTrace();
@@ -329,10 +339,36 @@ public class ControladorVentanaAdministrador implements Initializable {
         }
     }
 
+    public boolean estaSuspendido(String cedulaParticipante){
+        String valorDevuelto="";
+        try {
+
+            String procedimiento = "{call existeParticipante(?,?)}";
+            CallableStatement procParticipante = connection.prepareCall(procedimiento);
+            procParticipante.setString(1,cedulaParticipante);
+            procParticipante.registerOutParameter(2, Types.VARCHAR);
+            procParticipante.executeUpdate();
+            valorDevuelto = procParticipante.getString(2);
+        }
+        catch (SQLException e){
+            e.printStackTrace();
+        }
+        if(valorDevuelto==null)
+            return true;
+        return false;
+    }
+
     public void suspenderUser(){
         String identificacionUsuario = cuadroUsuarioASuspender.getText();
+        boolean isSuspended = estaSuspendido(identificacionUsuario);
+
+
+
         if(identificacionUsuario.equals(""))
             llamarAlerta("Se debe ingresar la identificación del usuario a suspender");
+
+        else if(isSuspended)
+            llamarAlerta("El usuario ingresado no existe o ya se encuentra suspendido");
 
         else{
             try{
@@ -341,6 +377,8 @@ public class ControladorVentanaAdministrador implements Initializable {
                 CallableStatement ejecutarProcSuspender = connection.prepareCall(suspenderUsuario);
                 ejecutarProcSuspender.setString(1,identificacionUsuario);
                 ejecutarProcSuspender.executeUpdate();
+                escribirMovimientoSuspension(identificacionUsuario);
+
             }
             catch(SQLException e){
                 llamarAlerta("Ingrese la cedula sin guiones y sin espacios");
@@ -355,6 +393,50 @@ public class ControladorVentanaAdministrador implements Initializable {
         else{
             //TODO Hacer procedure que guarde en la base el porcentaje de comision actual
         }
+    }
+
+    public void escribirMovimientoSuspension(String cedulaUsuario){
+        String mensaje = "El usuario: "+cedulaUsuario+" ha sido suspendido en la fecha: ";
+        try{
+            String movimientoSuspension = "{call escribirMovimientoSuspension(?,?)}";
+            CallableStatement procedimientoSuspension = connection.prepareCall(movimientoSuspension);
+            procedimientoSuspension.setString(1,administradorActual);
+            procedimientoSuspension.setString(2,mensaje);
+            procedimientoSuspension.executeUpdate();
+        }
+        catch(SQLException e){
+            e.printStackTrace();
+            llamarAlerta("Error al escribir en la bitácora");
+
+        }
+    }
+
+    public void listarUsuarios(){
+        ArrayList<Usuario> listaUsuarios = new ArrayList<>();
+        try{
+            String getUsers = "{call extraerUsuarios()}";
+            CallableStatement procedimientoUsuarios = connection.prepareCall(getUsers);
+            procedimientoUsuarios.execute();
+            ResultSet tuplesUsuarios = procedimientoUsuarios.getResultSet();
+
+            while(tuplesUsuarios.next()){
+                listaUsuarios.add(new Usuario(tuplesUsuarios.getString("CEDULAUSUARIO"),tuplesUsuarios.getString("SUSPENDIDO")));
+            }
+
+            ObservableList<Usuario> usuariosListados = FXCollections.observableArrayList(listaUsuarios);
+            tablaUsuariosListados.setItems(usuariosListados);
+        }
+        catch(SQLException e){
+            e.printStackTrace();
+            llamarAlerta("Error al solicitar los usuarios.");
+        }
+    }
+
+    public void configurarTablas(){
+
+        columnaUsuarioListado.setCellValueFactory(new PropertyValueFactory<Usuario,String>("usuario"));
+        columnaEstadoUsuario.setCellValueFactory(new PropertyValueFactory<Usuario,String>("estado"));
+
     }
 
 

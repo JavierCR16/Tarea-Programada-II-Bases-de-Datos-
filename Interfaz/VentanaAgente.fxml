@@ -78,16 +78,16 @@
          </font>
       </Label>
       <TextField fx:id="cuadroCedulaRetiro" layoutX="873.0" layoutY="94.0" prefHeight="25.0" prefWidth="164.0" />
-      <Label layoutX="740.0" layoutY="132.0" text="Dólares:">
+      <Label layoutX="739.0" layoutY="168.0" text="Dólares:">
          <font>
             <Font name="Arial Rounded MT Bold" size="13.0" />
          </font>
       </Label>
-      <TextField fx:id="cuadroDolaresRetiro" layoutX="873.0" layoutY="129.0" prefHeight="25.0" prefWidth="164.0" />
+      <TextField fx:id="cuadroDolaresRetiro" layoutX="872.0" layoutY="165.0" prefHeight="25.0" prefWidth="164.0" />
       <Button fx:id="botonRetirar" layoutX="951.0" layoutY="232.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="86.0" text="Retirar" />
       <Button fx:id="botonCerrarSesion" layoutX="955.0" layoutY="393.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="88.0" text="Cerrar Sesión" />
-      <TextField fx:id="cuadroColonesRetiro" layoutX="873.0" layoutY="164.0" prefHeight="25.0" prefWidth="164.0" />
-      <Label layoutX="739.0" layoutY="168.0" text="Colones:">
+      <TextField fx:id="cuadroColonesRetiro" layoutX="873.0" layoutY="129.0" prefHeight="25.0" prefWidth="164.0" />
+      <Label layoutX="739.0" layoutY="133.0" text="Colones:">
          <font>
             <Font name="Arial Rounded MT Bold" size="13.0" />
          </font>

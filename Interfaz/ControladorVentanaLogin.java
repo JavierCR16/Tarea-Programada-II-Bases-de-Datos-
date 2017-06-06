@@ -11,7 +11,8 @@ import javafx.stage.Stage;
 
 import java.net.URL;
 import java.sql.*;
-import java.util.ResourceBundle;
+import java.util.*;
+import java.util.Date;
 
 public class ControladorVentanaLogin implements Initializable{
 
@@ -238,7 +239,7 @@ public class ControladorVentanaLogin implements Initializable{
 
     }
 
-    public void abrirVentanaAgente(Connection connection, Statement statement){
+    public void abrirVentanaAgente(Connection connection, Statement statement,String usuarioActual){
 
         try{
             FXMLLoader loader = new FXMLLoader();
@@ -246,6 +247,7 @@ public class ControladorVentanaLogin implements Initializable{
             ControladorVentanaAgente controlador = loader.getController();
             controlador.connection= connection;
             controlador.statement = statement;
+            controlador.agenteActual = usuarioActual;
             Stage escenario = new Stage();
             escenario.setTitle("Agente");
             escenario.setScene(new Scene(root,1053,445));
@@ -307,6 +309,7 @@ public class ControladorVentanaLogin implements Initializable{
                  Connection nuevaConexion = devolverConnection(usuarioAdmi,contrasennaAdmi);
                  Statement nuevoEstado = devolverStatement(usuarioAdmi,contrasennaAdmi);
                  abrirVentanaAdministrador(nuevaConexion,nuevoEstado,usuarioAdmi);
+                 escribirMovimientoTipoLogin(usuarioAdmi);
             }
 
         }
@@ -328,7 +331,8 @@ public class ControladorVentanaLogin implements Initializable{
            else{
                 Connection nuevaConexion = devolverConnection(usuarioAgente,contrasennaAgente);
                 Statement nuevoEstado = devolverStatement(usuarioAgente,contrasennaAgente);
-                abrirVentanaAgente(nuevaConexion,nuevoEstado);
+                abrirVentanaAgente(nuevaConexion,nuevoEstado,usuarioAgente);
+                escribirMovimientoTipoLogin(usuarioAgente);
             }
         }
     }
@@ -390,10 +394,10 @@ public class ControladorVentanaLogin implements Initializable{
         else{
             boolean existeUsuario = existeConexionUsuarios(usuarioParticipante,contrasennaParticipante);
             String esParticipante = procedureBuscarLogin(3,usuarioParticipante);
+            String sesionAbierta = ultimoEstadoSesion()[1];
 
-
-            if(!existeUsuario || esParticipante==null)
-                llamarAlerta("El usuario ingresado no existe, fue suspendido o usted no tiene permisos como Participante");
+            if(!existeUsuario || esParticipante==null || sesionAbierta==null ||!sesionAbierta.equals("ABIERTO"))
+                llamarAlerta("El usuario ingresado no existe, fue suspendido, usted no tiene permisos como Participante o no existe una sesion disponible");
 
             else{
                 Connection nuevaConexion = devolverConnection(usuarioParticipante,contrasennaParticipante);
@@ -401,17 +405,6 @@ public class ControladorVentanaLogin implements Initializable{
                 abrirVentanaParticipante(nuevaConexion,nuevoEstado);
             }
 
-       /*     try{//Era de prueba para ver que extrai xdxdxd
-                String procedimiento = "{call caca(?)}";
-                CallableStatement ejecutarProcPrueba = connection.prepareCall(procedimiento);
-                ejecutarProcPrueba.registerOutParameter(1, Types.VARCHAR);
-                ejecutarProcPrueba.executeUpdate();
-                String edad = String.valueOf(ejecutarProcPrueba.getString(1));
-                System.out.println("La edad extraida del procedimiento es: "+edad);
-            }
-            catch(SQLException e){
-                e.printStackTrace();
-            }*/
         }
     }
 
@@ -429,6 +422,49 @@ public class ControladorVentanaLogin implements Initializable{
         alerta.setTitle("Error");
         alerta.setContentText(error);
         alerta.showAndWait();
+    }
+
+    public void escribirMovimientoTipoLogin(String personaLogueada){
+
+        String mensaje = "El usuario: "+personaLogueada+" se ha logueado satisfactoriamente en la fecha: ";
+
+
+        try{
+            String movimientoLogin = "{call escribirMovimientoLogin(?,?)}";
+            CallableStatement ejecutarProcedimientoMovimiento = connection.prepareCall(movimientoLogin);
+            ejecutarProcedimientoMovimiento.setString(1,personaLogueada);
+            ejecutarProcedimientoMovimiento.setString(2,mensaje);
+            ejecutarProcedimientoMovimiento.executeUpdate();
+        }
+        catch(SQLException e){
+            e.printStackTrace();
+            llamarAlerta("Error al escribir en la bitácora.");
+        }
+    }
+
+    public String[] ultimoEstadoSesion(){
+        String estadoSesion = "";
+        String idSesion="";
+        String [] infoSesion = new String [2];
+        try{
+            String ultimoEstado = "{call estadoUltimaSesion(?,?)}";
+            CallableStatement procedimientoEstado = connection.prepareCall(ultimoEstado);
+            procedimientoEstado.registerOutParameter(1,Types.INTEGER);
+            procedimientoEstado.registerOutParameter(2, Types.VARCHAR);
+            procedimientoEstado.executeUpdate();
+            idSesion = String.valueOf(procedimientoEstado.getInt(1));
+            estadoSesion = procedimientoEstado.getString(2);
+
+        }
+        catch(SQLException e){
+            e.printStackTrace();
+        }
+        System.out.println(estadoSesion);
+        infoSesion[0] = idSesion;
+        infoSesion[1]= estadoSesion;
+
+        return infoSesion;
+
     }
 
 
