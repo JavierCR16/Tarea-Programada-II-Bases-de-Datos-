@@ -259,11 +259,16 @@ public class ControladorVentanaLogin implements Initializable{
 
     }
 
-    public void abrirVentanaParticipante(Connection connection,Statement statement){
+    public void abrirVentanaParticipante(Connection connection,Statement statement,String usuarioActual){
 
             try{
                 FXMLLoader loader = new FXMLLoader();
                 Parent root = loader.load(getClass().getResource("VentanaParticipante.fxml").openStream());
+                ControladorVentanaParticipante controlador = loader.getController();
+                controlador.connection = connection;
+                controlador.statement = statement;
+                controlador.participanteActual = usuarioActual;
+                controlador.setSesionActual();
                 Stage escenario = new Stage();
                 escenario.setTitle("Participante");
                 escenario.setScene(new Scene(root,1053,417));
@@ -402,7 +407,8 @@ public class ControladorVentanaLogin implements Initializable{
             else{
                 Connection nuevaConexion = devolverConnection(usuarioParticipante,contrasennaParticipante);
                 Statement nuevoEstado = devolverStatement(usuarioParticipante,contrasennaParticipante);
-                abrirVentanaParticipante(nuevaConexion,nuevoEstado);
+                abrirVentanaParticipante(nuevaConexion,nuevoEstado,usuarioParticipante);
+                escribirMovimientoTipoLogin(usuarioParticipante);
             }
 
         }

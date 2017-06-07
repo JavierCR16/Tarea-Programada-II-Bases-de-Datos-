@@ -13,6 +13,7 @@ import javafx.stage.Stage;
 import jdk.nashorn.internal.codegen.CompilerConstants;
 import sun.util.resources.cldr.vai.CalendarData_vai_Latn_LR;
 
+import java.math.BigDecimal;
 import java.net.URL;
 import java.sql.*;
 import java.text.SimpleDateFormat;
@@ -33,7 +34,7 @@ public class ControladorVentanaAdministrador implements Initializable {
     Label promedioTipoCambio;
 
     @FXML
-    ComboBox cajaPorcentajeComision;
+    TextField cajaPorcentajeComision;
 
     @FXML
     Button botonEstablecerPorcentaje;
@@ -178,7 +179,7 @@ public class ControladorVentanaAdministrador implements Initializable {
 
         botonEstablecerPorcentaje.setOnAction(event -> {
             establecerPorcentajeComision();
-            cajaPorcentajeComision.getSelectionModel().clearSelection();
+            cajaPorcentajeComision.clear();
         });
 
         botonListarUsuarios.setOnAction(event -> {
@@ -387,11 +388,19 @@ public class ControladorVentanaAdministrador implements Initializable {
     }
 
     public void establecerPorcentajeComision(){
-        Object comision = cajaPorcentajeComision.getSelectionModel().getSelectedItem();
-        if(comision == null)
+        String comision = cajaPorcentajeComision.getText();
+        if(comision.equals(""))
             llamarAlerta("Se debe introducir un porcentaje de comision");
         else{
-            //TODO Hacer procedure que guarde en la base el porcentaje de comision actual
+            try{
+                String procedimientoComision = "{call agregarComision(?)}";
+                CallableStatement ejecutarComision = connection.prepareCall(procedimientoComision);
+                ejecutarComision.setBigDecimal(1,new BigDecimal(comision));
+                ejecutarComision.executeUpdate();
+            }
+            catch(SQLException e){
+                e.printStackTrace();
+            }
         }
     }
 
@@ -438,6 +447,5 @@ public class ControladorVentanaAdministrador implements Initializable {
         columnaEstadoUsuario.setCellValueFactory(new PropertyValueFactory<Usuario,String>("estado"));
 
     }
-
 
 }

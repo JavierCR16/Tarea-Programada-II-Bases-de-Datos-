@@ -146,7 +146,6 @@
                   <Button fx:id="botonCrearAgente" layoutX="788.0" layoutY="367.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="86.0" text="Crear" />
                   <Separator layoutX="592.0" layoutY="17.0" orientation="VERTICAL" prefHeight="380.0" prefWidth="6.0" />
                   <Button fx:id="botonEstablecerPorcentaje" layoutX="140.0" layoutY="309.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="86.0" text="Establecer" />
-                  <ComboBox fx:id="cajaPorcentajeComision" layoutX="192.0" layoutY="264.0" prefHeight="25.0" prefWidth="0.0" />
                   <Label layoutX="108.0" layoutY="268.0" text="Porcentaje:">
                      <font>
                         <Font name="Arial Rounded MT Bold" size="13.0" />
@@ -196,6 +195,7 @@
                   <PasswordField fx:id="contrasenaCrearAgente" layoutX="689.0" layoutY="216.0" />
                   <PasswordField fx:id="confirmacionCrearAgente" layoutX="689.0" layoutY="252.0" />
                   <Button fx:id="botonCerrarSesion" layoutX="408.0" layoutY="309.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="110.0" text="Cerrar Sesión" />
+                  <TextField fx:id="cajaPorcentajeComision" layoutX="194.0" layoutY="265.0" prefHeight="25.0" prefWidth="91.0" />
                </children></AnchorPane>
       </content>
     </Tab>
