@@ -10,6 +10,7 @@ import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.stage.Stage;
 
+import javax.swing.*;
 import javax.xml.soap.Text;
 import java.math.BigDecimal;
 import java.net.URL;
@@ -143,28 +144,29 @@ public class ControladorVentanaParticipante implements Initializable {
             llamarAlerta("Debe ingresar todos los datos antes de realizar una oferta");
         else{
             try{
+                int input = JOptionPane.showOptionDialog(null, "Desea enviar la oferta?", "Confirmar", JOptionPane.OK_CANCEL_OPTION, JOptionPane.INFORMATION_MESSAGE, null, null, null);
+                if(input == JOptionPane.OK_OPTION) {
+                    int idSesionActual = Integer.parseInt(ultimoEstadoSesion()[0]);
+                    String estadoSesion = ultimoEstadoSesion()[1];
+                    BigDecimal porcentajeComisionActual = adquirirPorcentaje();
+                    System.out.println(porcentajeComisionActual);
+                    if (!estadoSesion.equals("ABIERTO") || idSesionActual != sesionActual) {
+                        llamarAlerta("Se ha cerrado la sesión actual. Se le devolverá a la pantalla principal");
+                        Stage escenario = (Stage) botonEnviarOferta.getScene().getWindow();
+                        escenario.close();
+                    } else {
+                        String enviarOferta = "{call agregarOferta(?,?,?,?,?,?,?)}";
+                        CallableStatement procedimientoOferta = connection.prepareCall(enviarOferta);
+                        procedimientoOferta.setInt(1, idSesionActual);
+                        procedimientoOferta.setString(2, tipoOferta.toString());
+                        procedimientoOferta.setBigDecimal(3, new BigDecimal(monto));
+                        procedimientoOferta.setBigDecimal(4, new BigDecimal(tipoCambio));
+                        procedimientoOferta.setString(5, tipoMoneda.toString());
+                        procedimientoOferta.setString(6, participanteActual);
+                        procedimientoOferta.setBigDecimal(7, porcentajeComisionActual);
+                        procedimientoOferta.executeUpdate();
 
-                int idSesionActual = Integer.parseInt(ultimoEstadoSesion()[0]);
-                String estadoSesion = ultimoEstadoSesion()[1];
-                BigDecimal porcentajeComisionActual = adquirirPorcentaje();
-                System.out.println(porcentajeComisionActual);
-                if(!estadoSesion.equals("ABIERTO") || idSesionActual!=sesionActual) {
-                    llamarAlerta("Se ha cerrado la sesión actual. Se le devolverá a la pantalla principal");
-                    Stage escenario = (Stage) botonEnviarOferta.getScene().getWindow();
-                    escenario.close();
-                }
-                else{
-                    String enviarOferta = "{call agregarOferta(?,?,?,?,?,?,?)}";
-                    CallableStatement procedimientoOferta = connection.prepareCall(enviarOferta);
-                    procedimientoOferta.setInt(1,idSesionActual);
-                    procedimientoOferta.setString(2,tipoOferta.toString());
-                    procedimientoOferta.setBigDecimal(3,new BigDecimal(monto));
-                    procedimientoOferta.setBigDecimal(4,new BigDecimal(tipoCambio));
-                    procedimientoOferta.setString(5,tipoMoneda.toString());
-                    procedimientoOferta.setString(6,participanteActual);
-                    procedimientoOferta.setBigDecimal(7,porcentajeComisionActual);
-                    procedimientoOferta.executeUpdate();
-
+                    }
                 }
 
             }
@@ -278,7 +280,6 @@ public class ControladorVentanaParticipante implements Initializable {
             }
         }
     }
-
 
     public void setSesionActual(){
         sesionActual = Integer.parseInt(ultimoEstadoSesion()[0]);

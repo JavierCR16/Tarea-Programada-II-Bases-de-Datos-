@@ -243,11 +243,18 @@ public class ControladorVentanaAdministrador implements Initializable {
 
     public void cerrarSesion() {
         try {
+
             String cerrarSesion = "{call abrirCerrarSesion(?,?)}";
             CallableStatement procedimientoSesion = connection.prepareCall(cerrarSesion);
             procedimientoSesion.setString(1, administradorActual);
             procedimientoSesion.setString(2, "CERRAR");
             procedimientoSesion.executeUpdate();
+
+
+            //CODIGO QUE ITERA SOBRE LAS OFERTAS Y LAS AGREGA COMO MOVIMIENTO
+            String tuplesOfertas = "{call ofertasSinNegociar}";
+
+
         } catch (SQLException e) {
 //            e.printStackTrace();
             llamarAlerta("No hay ninguna sesion para cerrar. Intente más tarde");
@@ -334,7 +341,6 @@ public class ControladorVentanaAdministrador implements Initializable {
         alerta.setContentText(error);
         alerta.showAndWait();
     }
-
 
     public boolean estaSuspendido(String cedulaParticipante) {
         String valorDevuelto = "";
@@ -467,6 +473,7 @@ public class ControladorVentanaAdministrador implements Initializable {
             e.printStackTrace();
         }
     }
+
     public String[] ultimoEstadoSesion(){
         String estadoSesion = "";
         String idSesion="";
@@ -491,6 +498,7 @@ public class ControladorVentanaAdministrador implements Initializable {
         return infoSesion;
 
     }
+
     public void listarPizarra(){
         int idSesion = Integer.parseInt(ultimoEstadoSesion()[0]);
         String estadoSesion = ultimoEstadoSesion()[1];
@@ -528,6 +536,7 @@ public class ControladorVentanaAdministrador implements Initializable {
             }
         }
     }
+
     public void listarUltimasTransacciones(){
 
         int idSesion = Integer.parseInt(cajaSesionVisualizarTransacciones.getSelectionModel().getSelectedItem().toString());
