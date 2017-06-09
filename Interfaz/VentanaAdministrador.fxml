@@ -40,12 +40,12 @@
                   <ComboBox fx:id="cajaTipoOrdenamiento" layoutX="623.0" layoutY="70.0" prefHeight="25.0" prefWidth="181.0" />
                   <TableView fx:id="pizarraAdministrador" layoutX="531.0" layoutY="115.0" prefHeight="264.0" prefWidth="440.0">
                     <columns>
-                      <TableColumn fx:id="columnaConsecutivo" prefWidth="56.0" text="ID" />
-                      <TableColumn fx:id="columnaVentaCompra" prefWidth="90.0" text="Usuario" />
-                        <TableColumn fx:id="columnaMoneda" prefWidth="75.0" text="Tipo" />
-                        <TableColumn fx:id="columnaMonto" prefWidth="75.0" text="Moneda" />
-                        <TableColumn fx:id="columnaTipo" prefWidth="75.0" text="TipoCambio" />
-                        <TableColumn prefWidth="75.0" text="Monto" />
+                      <TableColumn fx:id="columnaIDlistarPizarra" prefWidth="56.0" text="ID" />
+                      <TableColumn fx:id="columnaUsuarioListarPizarra" prefWidth="90.0" text="Usuario" />
+                        <TableColumn fx:id="columnaTipoListarPizarra" prefWidth="75.0" text="Tipo" />
+                        <TableColumn fx:id="columnaMonedaListarPizarra" prefWidth="75.0" text="Moneda" />
+                        <TableColumn fx:id="columnaTipoCambioListarPizarra" prefWidth="75.0" text="TipoCambio" />
+                        <TableColumn fx:id="columnaMontoListarPizarra" prefWidth="75.0" text="Monto" />
                     </columns>
                      <columnResizePolicy>
                         <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
@@ -98,12 +98,14 @@
                         <Font name="Baskerville Old Face" size="20.0" />
                      </font>
                   </Label>
-                  <TableView fx:id="tablaVisualizarTransaccionesC" layoutX="898.0" layoutY="115.0" prefHeight="264.0" prefWidth="349.0">
+                  <TableView fx:id="tablaVisualizarTransaccionesC" layoutX="898.0" layoutY="111.0" prefHeight="264.0" prefWidth="355.0">
                     <columns>
-                      <TableColumn prefWidth="87.0" text="Usuario 1" />
-                      <TableColumn prefWidth="87.0" text="Transaccion" />
-                        <TableColumn prefWidth="87.0" text="Monto" />
-                        <TableColumn prefWidth="87.0" text="Usuario 2" />
+                      <TableColumn fx:id="columUsuario1VisualizarTransacciones" prefWidth="63.0" text="Usuario 1" />
+                      <TableColumn fx:id="columnTransaccionVisualizarTransacciones" minWidth="4.0" prefWidth="83.0" text="Transaccion" />
+                        <TableColumn fx:id="columnMontoVisualizarTransacciones" minWidth="0.0" prefWidth="52.0" text="Monto" />
+                        <TableColumn fx:id="columUsuario2VisualizarTransacciones" minWidth="9.0" prefWidth="61.0" text="Usuario 2" />
+                        <TableColumn fx:id="columnTipoCambioVisualizarTransacciones" prefWidth="95.0" text="Tipo cambio" />
+                        <TableColumn fx:id="columnUsuario2VisualizarTransacciones1" minWidth="9.0" prefWidth="61.0" text="Usuario 2" />
                     </columns>
                   </TableView>
                   <Button fx:id="botonVisualizarTransaccionesC" layoutX="1160.0" layoutY="70.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="86.0" text="Visualizar" />
@@ -156,7 +158,7 @@
                         <Font name="Arial Rounded MT Bold" size="13.0" />
                      </font>
                   </Label>
-                  <Label layoutX="166.0" layoutY="85.0" text="Total Venta Doltares:">
+                  <Label layoutX="166.0" layoutY="85.0" text="Total Venta Dolares:">
                      <font>
                         <Font name="Arial Rounded MT Bold" size="13.0" />
                      </font>
@@ -196,6 +198,9 @@
                   <PasswordField fx:id="confirmacionCrearAgente" layoutX="689.0" layoutY="252.0" />
                   <Button fx:id="botonCerrarSesion" layoutX="408.0" layoutY="309.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="110.0" text="Cerrar Sesión" />
                   <TextField fx:id="cajaPorcentajeComision" layoutX="194.0" layoutY="265.0" prefHeight="25.0" prefWidth="91.0" />
+                  <ComboBox fx:id="cajaSesionVisualizarTransacciones" layoutX="898.0" layoutY="70.0" prefWidth="150.0" />
+                  <Button fx:id="botonActualizarCajaVisualizarTransacciones" layoutX="1057.0" layoutY="68.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="30.0" />
+                  <Label layoutX="898.0" layoutY="52.0" prefHeight="17.0" prefWidth="58.0" text="Sesion:" />
                </children></AnchorPane>
       </content>
     </Tab>

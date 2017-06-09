@@ -24,8 +24,6 @@ public class ControladorVentanaParticipante implements Initializable {
     @FXML
     ComboBox cajaTipoOferta;
 
-    @FXML
-    ComboBox cajaTipoMoneda;
 
     @FXML
     TextField tipoCambioOferta;
@@ -95,7 +93,6 @@ public class ControladorVentanaParticipante implements Initializable {
 
         configurarTablas();
 
-        cajaTipoMoneda.getItems().addAll("Dolares","Colones");
         cajaTipoOferta.getItems().addAll("Compra","Venta");
 
         botonCerrarSesion.setOnAction(event -> {
@@ -112,7 +109,6 @@ public class ControladorVentanaParticipante implements Initializable {
             montoOferta.clear();
             tipoCambioOferta.clear();
             cajaTipoOferta.getSelectionModel().clearSelection();
-            cajaTipoMoneda.getSelectionModel().clearSelection();
         });
 
         botonActualizarUltimasTransConc.setOnAction(event -> {
@@ -125,7 +121,7 @@ public class ControladorVentanaParticipante implements Initializable {
     public void enviarOferta(){
 
 
-        Object tipoMoneda = cajaTipoMoneda.getSelectionModel().getSelectedItem();
+        Object tipoMoneda = "Dolares";
         Object tipoOferta = cajaTipoOferta.getSelectionModel().getSelectedItem();
         String tipoCambio = tipoCambioOferta.getText();
         String monto = montoOferta.getText();

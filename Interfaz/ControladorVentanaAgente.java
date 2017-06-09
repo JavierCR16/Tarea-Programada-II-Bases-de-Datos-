@@ -183,8 +183,8 @@ public class ControladorVentanaAgente implements Initializable {
         Object diaNacimiento = cajaDia.getSelectionModel().getSelectedItem();
 
         if(cedulaParticipante.equals("") || nombreParticipante.equals("")||telefonoParticipante.equals("") || correoParticipante.equals("")
-                || palabraClave.equals("") || confirmacionClave.equals(""))
-            llamarAlerta("Deben ingresarse todos los datos del participante");
+                || palabraClave.equals("") || confirmacionClave.equals("") || annoNacimiento == null || mesNacimiento == null || diaNacimiento == null)
+            llamarAlerta("Deben ingresarse todos los datos del participante" );
         else if(!palabraClave.equals(confirmacionClave))
             llamarAlerta("La clave seleccionada no coincide. Intente de nuevo");
         else{
