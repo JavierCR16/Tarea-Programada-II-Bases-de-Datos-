@@ -543,13 +543,18 @@ public class ControladorVentanaAdministrador implements Initializable {
                 procedimientoTransaccion.execute();
                 ResultSet tuplesTransaccion = procedimientoTransaccion.getResultSet();
 
+                int contadorAuxiliar = 0;
                 while(tuplesTransaccion.next()){
                     String usuario1 = tuplesTransaccion.getString("CEDULAUSUARIO1");
                     String transaccion = tuplesTransaccion.getString("ACCION");
                     String monto = String.valueOf(tuplesTransaccion.getBigDecimal("MONTO"));
                     String tipoCambio = String.valueOf(tuplesTransaccion.getBigDecimal("TIPOCAMBIO"));
                     String usuario2 = tuplesTransaccion.getString("CEDULAUSUARIO2");
-                    transacciones.add(new Transaccion(usuario1,transaccion,monto,tipoCambio,usuario2));
+                    if(contadorAuxiliar==2) {
+                        transacciones.add(new Transaccion(usuario1, transaccion, monto, tipoCambio, usuario2));
+                        contadorAuxiliar=0;
+                    }
+                    contadorAuxiliar++;
                     promedioTipoCambioVar+= Double.parseDouble(tipoCambio);
                     contador++;
                     if(transaccion.equals("COMPRA"))
@@ -563,21 +568,7 @@ public class ControladorVentanaAdministrador implements Initializable {
                 totalVentaDolares.setText(totalVentaDolaresVar.toString());
                 promedioTipoCambio.setText(promedioTipoCambioVar.toString());
                 ObservableList<Transaccion> listaTransacciones = FXCollections.observableArrayList(transacciones);
-                int contador1 = 0;
-
-                for(int i = 0;i<listaTransacciones.size();i++){
-                    if(contador1==2) {
-                        tablaVisualizarTransaccionesC.getItems().add(i, new Oferta("", "", "", "", "", ""));
-                        contador1=0;
-                        tablaVisualizarTransaccionesC.getItems().add(i+1,listaTransacciones.get(i));
-                        i=i+1;
-                    }
-                    tablaVisualizarTransaccionesC.getItems().add(i, listaTransacciones.get(i));
-                    contador1++;
-
-                }
-
-               // tablaVisualizarTransaccionesC.setItems(listaTransacciones);
+                tablaVisualizarTransaccionesC.setItems(listaTransacciones);
             }
             catch(SQLException e){
                 e.printStackTrace();

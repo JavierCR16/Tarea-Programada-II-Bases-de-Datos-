@@ -294,29 +294,24 @@ public class ControladorVentanaParticipante implements Initializable {
                 procedimientoTransaccion.execute();
                 ResultSet tuplesTransaccion = procedimientoTransaccion.getResultSet();
 
+                int contador = 0;
                 while(tuplesTransaccion.next()){
                     String usuario1 = tuplesTransaccion.getString("CEDULAUSUARIO1");
                     String transaccion = tuplesTransaccion.getString("ACCION");
                     String monto = String.valueOf(tuplesTransaccion.getBigDecimal("MONTO"));
                     String tipoCambio = String.valueOf(tuplesTransaccion.getBigDecimal("TIPOCAMBIO"));
                     String usuario2 = tuplesTransaccion.getString("CEDULAUSUARIO2");
+                    if(contador==2) {
+                        transacciones.add(new Transaccion("", "", "", "", ""));
+                        contador=0;
+                    }
                     transacciones.add(new Transaccion(usuario1,transaccion,monto,tipoCambio,usuario2));
+                    contador++;
                 }
 
                 ObservableList<Transaccion> listaTransacciones = FXCollections.observableArrayList(transacciones);
-               // tablaUltimasTransaccionesC.setItems(listaTransacciones);
-                int contador = 0;
-                for(int i = 0;i<listaTransacciones.size();i++){
-                    if(contador==2) {
-                        tablaUltimasTransaccionesC.getItems().add(i, new Oferta("", "", "", "", "", ""));
-                        contador=0;
-                        tablaUltimasTransaccionesC.getItems().add(i+1,listaTransacciones.get(i));
-                        i=i+1;
-                    }
-                    tablaUltimasTransaccionesC.getItems().add(i, listaTransacciones.get(i));
-                    contador++;
+                tablaUltimasTransaccionesC.setItems(listaTransacciones);
 
-                }
 
             }
             catch(SQLException e){
