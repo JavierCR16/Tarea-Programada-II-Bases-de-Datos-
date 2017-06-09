@@ -506,9 +506,10 @@ public class ControladorVentanaAdministrador implements Initializable {
 
         if(estadoSesion.equals("ABIERTO")){
             try {
-                String adquireOferta = "{call adquirirOfertas(?)}";
+                String adquireOferta = "{call adquirirOfertas(?,?)}";
                 CallableStatement procedimientoAdquirirOfertas = connection.prepareCall(adquireOferta);
                 procedimientoAdquirirOfertas.setInt(1, idSesion);
+                procedimientoAdquirirOfertas.setInt(2,4);
                 procedimientoAdquirirOfertas.execute();
                 ResultSet tuplesOfertas = procedimientoAdquirirOfertas.getResultSet();
                 String filtro;

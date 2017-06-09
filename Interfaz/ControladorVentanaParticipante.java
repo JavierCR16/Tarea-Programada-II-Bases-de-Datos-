@@ -91,6 +91,9 @@ public class ControladorVentanaParticipante implements Initializable {
     TableColumn columnaAccion;
 
     @FXML
+    ComboBox cajaVentaCompraPizarraNegociaciones;
+
+    @FXML
     TableColumn columnaMontoUltimo;
 
     @FXML
@@ -128,7 +131,7 @@ public class ControladorVentanaParticipante implements Initializable {
         botonActualizarUltimasTransConc.setOnAction(event -> {
             listarUltimasTransacciones();
         });
-
+        cajaVentaCompraPizarraNegociaciones.getItems().addAll( "Venta", "Compra","Ambos");
 
     }
 
@@ -255,9 +258,66 @@ public class ControladorVentanaParticipante implements Initializable {
         }
         else {
             try {
-                String adquireOferta = "{call adquirirOfertas(?)}";
-                CallableStatement procedimientoAdquirirOfertas = connection.prepareCall(adquireOferta);
-                procedimientoAdquirirOfertas.setInt(1, idSesion);
+                String filtro;
+                try{
+                    filtro =cajaVentaCompraPizarraNegociaciones.getSelectionModel().getSelectedItem().toString();
+                }catch(Exception e){
+                    filtro = "Ambos";
+                }
+                CallableStatement procedimientoAdquirirOfertas;
+                if((txtTipoCambioMinimoPizarraNegociaciones.getText().equals("")||txtTipoCambioMaxmoPizarraNegociaciones.getText().equals(""))
+                        && (txtMontoMinimoPizarraNegociaciones.getText().equals("")||txtMontoMaximoPizarraNegociaciones.getText().equals(""))){
+                    String adquireOferta = "{call adquirirOfertas(?,?)}";
+                    procedimientoAdquirirOfertas = connection.prepareCall(adquireOferta);
+                    procedimientoAdquirirOfertas.setInt(1, idSesion);
+                    procedimientoAdquirirOfertas.setInt(2,4);
+                }
+                else if(txtMontoMinimoPizarraNegociaciones.getText().equals("")||txtMontoMaximoPizarraNegociaciones.getText().equals("")){
+                    String min = txtTipoCambioMinimoPizarraNegociaciones.getText();
+                    String max = txtTipoCambioMaxmoPizarraNegociaciones.getText();
+                    BigDecimal mini = new BigDecimal(min);
+                    BigDecimal maxi = new BigDecimal(max);
+                    String adquireOferta = "{call adquirirOfertas(?,?,?,?,?,?)}";
+                    procedimientoAdquirirOfertas = connection.prepareCall(adquireOferta);
+                    procedimientoAdquirirOfertas.setInt(1, idSesion);
+                    procedimientoAdquirirOfertas.setInt(2,3);
+                    procedimientoAdquirirOfertas.setBigDecimal(3,new BigDecimal("0"));
+                    procedimientoAdquirirOfertas.setBigDecimal(4,new BigDecimal("0"));
+                    procedimientoAdquirirOfertas.setBigDecimal(5,mini);
+                    procedimientoAdquirirOfertas.setBigDecimal(6,maxi);
+                }
+                else if(txtTipoCambioMinimoPizarraNegociaciones.getText().equals("")||txtTipoCambioMaxmoPizarraNegociaciones.getText().equals("")){
+                    String min = txtMontoMinimoPizarraNegociaciones.getText();
+                    String max = txtMontoMaximoPizarraNegociaciones.getText();
+                    BigDecimal mini = new BigDecimal(min);
+                    BigDecimal maxi = new BigDecimal(max);
+                    String adquireOferta = "{call adquirirOfertas(?,?,?,?)}";
+                    procedimientoAdquirirOfertas = connection.prepareCall(adquireOferta);
+                    procedimientoAdquirirOfertas.setInt(1, idSesion);
+                    procedimientoAdquirirOfertas.setInt(2,2);
+                    procedimientoAdquirirOfertas.setBigDecimal(3,mini);
+                    procedimientoAdquirirOfertas.setBigDecimal(4,maxi);
+                }
+                else{
+                    String min = txtMontoMinimoPizarraNegociaciones.getText();
+                    String max = txtMontoMaximoPizarraNegociaciones.getText();
+                    BigDecimal mini = new BigDecimal(min);
+                    BigDecimal maxi = new BigDecimal(max);
+                    String minim = txtTipoCambioMinimoPizarraNegociaciones.getText();
+                    String maxim = txtTipoCambioMaxmoPizarraNegociaciones.getText();
+                    BigDecimal minimo = new BigDecimal(minim);
+                    BigDecimal maximo = new BigDecimal(maxim);
+                    String adquireOferta = "{call adquirirOfertas(?,?,?,?,?,?)}";
+                    procedimientoAdquirirOfertas = connection.prepareCall(adquireOferta);
+                    procedimientoAdquirirOfertas.setInt(1, idSesion);
+                    procedimientoAdquirirOfertas.setInt(2,3);
+                    procedimientoAdquirirOfertas.setBigDecimal(3,mini);
+                    procedimientoAdquirirOfertas.setBigDecimal(4,maxi);
+                    procedimientoAdquirirOfertas.setBigDecimal(5,minimo);
+                    procedimientoAdquirirOfertas.setBigDecimal(6,maximo);
+                }
+
+
                 procedimientoAdquirirOfertas.execute();
                 ResultSet tuplesOfertas = procedimientoAdquirirOfertas.getResultSet();
 
@@ -268,8 +328,8 @@ public class ControladorVentanaParticipante implements Initializable {
                     String tipoCambio = String.valueOf(tuplesOfertas.getBigDecimal("TIPOCAMBIO"));
                     String moneda = tuplesOfertas.getString("MONEDA");
                     String participante = tuplesOfertas.getString("CEDULAPARTICIPANTE");
-                    ofertas.add(new Oferta(idOferta, participante, tipoOferta, monto, moneda, tipoCambio));
-
+                    if(filtro.equals("Ambos")||filtro.equals(tipoOferta))
+                        ofertas.add(new Oferta(idOferta, participante, tipoOferta, monto, moneda, tipoCambio));
                 }
 
                 ObservableList<Oferta> listaOfertas = FXCollections.observableArrayList(ofertas);
@@ -299,6 +359,7 @@ public class ControladorVentanaParticipante implements Initializable {
 
         else{
             try{
+
                 ArrayList<Transaccion> transacciones= new ArrayList<>();
 
                 String extraerTransacciones = "{call extraerUltimasTransacciones(?)}";
@@ -311,6 +372,7 @@ public class ControladorVentanaParticipante implements Initializable {
                 while(tuplesTransaccion.next()){
                     String usuario1 = tuplesTransaccion.getString("CEDULAUSUARIO1");
                     String transaccion = tuplesTransaccion.getString("ACCION");
+                    System.out.println(transaccion);
                     String monto = String.valueOf(tuplesTransaccion.getBigDecimal("MONTO"));
                     String tipoCambio = String.valueOf(tuplesTransaccion.getBigDecimal("TIPOCAMBIO"));
                     String usuario2 = tuplesTransaccion.getString("CEDULAUSUARIO2");
