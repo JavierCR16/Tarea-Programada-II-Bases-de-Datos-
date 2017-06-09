@@ -563,7 +563,21 @@ public class ControladorVentanaAdministrador implements Initializable {
                 totalVentaDolares.setText(totalVentaDolaresVar.toString());
                 promedioTipoCambio.setText(promedioTipoCambioVar.toString());
                 ObservableList<Transaccion> listaTransacciones = FXCollections.observableArrayList(transacciones);
-                tablaVisualizarTransaccionesC.setItems(listaTransacciones);
+                int contador1 = 0;
+
+                for(int i = 0;i<listaTransacciones.size();i++){
+                    if(contador1==2) {
+                        tablaVisualizarTransaccionesC.getItems().add(i, new Oferta("", "", "", "", "", ""));
+                        contador1=0;
+                        tablaVisualizarTransaccionesC.getItems().add(i+1,listaTransacciones.get(i));
+                        i=i+1;
+                    }
+                    tablaVisualizarTransaccionesC.getItems().add(i, listaTransacciones.get(i));
+                    contador1++;
+
+                }
+
+               // tablaVisualizarTransaccionesC.setItems(listaTransacciones);
             }
             catch(SQLException e){
                 e.printStackTrace();

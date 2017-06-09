@@ -304,7 +304,20 @@ public class ControladorVentanaParticipante implements Initializable {
                 }
 
                 ObservableList<Transaccion> listaTransacciones = FXCollections.observableArrayList(transacciones);
-                tablaUltimasTransaccionesC.setItems(listaTransacciones);
+               // tablaUltimasTransaccionesC.setItems(listaTransacciones);
+                int contador = 0;
+                for(int i = 0;i<listaTransacciones.size();i++){
+                    if(contador==2) {
+                        tablaUltimasTransaccionesC.getItems().add(i, new Oferta("", "", "", "", "", ""));
+                        contador=0;
+                        tablaUltimasTransaccionesC.getItems().add(i+1,listaTransacciones.get(i));
+                        i=i+1;
+                    }
+                    tablaUltimasTransaccionesC.getItems().add(i, listaTransacciones.get(i));
+                    contador++;
+
+                }
+
             }
             catch(SQLException e){
                 e.printStackTrace();
