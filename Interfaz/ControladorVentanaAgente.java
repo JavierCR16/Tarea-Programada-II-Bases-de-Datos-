@@ -72,6 +72,7 @@ public class ControladorVentanaAgente implements Initializable {
     @FXML
     TextField cuadroColonesRetiro;
 
+
     Connection connection;
     Statement statement;
 

@@ -1,6 +1,7 @@
 package Interfaz;
 
 import Auxiliares.Oferta;
+import Auxiliares.Transaccion;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
@@ -68,6 +69,21 @@ public class ControladorVentanaParticipante implements Initializable {
     @FXML
     Button botonCerrarSesion;
 
+    @FXML
+    TableColumn columnaUsuario1;
+
+    @FXML
+    TableColumn columnaUsuario2;
+
+    @FXML
+    TableColumn columnaAccion;
+
+    @FXML
+    TableColumn columnaMontoUltimo;
+
+    @FXML
+    TableColumn columnaTipoCambioUltimo;
+
     String participanteActual;
 
     int sesionActual;
@@ -98,6 +114,12 @@ public class ControladorVentanaParticipante implements Initializable {
             cajaTipoOferta.getSelectionModel().clearSelection();
             cajaTipoMoneda.getSelectionModel().clearSelection();
         });
+
+        botonActualizarUltimasTransConc.setOnAction(event -> {
+            listarUltimasTransacciones();
+        });
+
+
     }
 
     public void enviarOferta(){
@@ -147,36 +169,6 @@ public class ControladorVentanaParticipante implements Initializable {
 
     }
 
-
-
-  /*  public Oferta ultimaOferta(){
-        String id = "";
-        String usuario = "";
-        String tipo = "";
-        String monto = "";
-        String moneda = "";
-        String tipoCambio = "";
-        try{
-            String extraerOferta = "{call ultimaOferta()}";
-            CallableStatement procOferta = connection.prepareCall(extraerOferta);
-            procOferta.execute();
-            ResultSet tupleOferta = procOferta.getResultSet();
-
-            while(tupleOferta.next()){
-                id = String.valueOf(tupleOferta.getInt("ID"));
-                usuario = tupleOferta.getString("CEDULAPARTICIPANTE");
-                tipo= tupleOferta.getString("TIPOOFERTA");
-                monto = String.valueOf(tupleOferta.getBigDecimal("MONTO"));
-                moneda = tupleOferta.getString("MONEDA");
-                tipoCambio = String.valueOf(tupleOferta.getBigDecimal("TIPOCAMBIO"));
-            }
-        }
-        catch(SQLException e){
-            e.printStackTrace();
-        }
-        return new Oferta(id,usuario,tipo,monto,moneda,tipoCambio);
-    }*/
-
     public void configurarTablas(){
         columnaIdOferta.setCellValueFactory(new PropertyValueFactory<Oferta,String>("idOferta"));
         columnaUsuario.setCellValueFactory(new PropertyValueFactory<Oferta,String>("usuario"));
@@ -184,6 +176,12 @@ public class ControladorVentanaParticipante implements Initializable {
         columnaMoneda.setCellValueFactory(new PropertyValueFactory<Oferta,String>("moneda"));
         columnaMonto.setCellValueFactory(new PropertyValueFactory<Oferta,String>("monto"));
         columnaTipoCambio.setCellValueFactory(new PropertyValueFactory<Oferta,String>("tipoCambio"));
+        columnaUsuario1.setCellValueFactory(new PropertyValueFactory<Transaccion,String>("usuario1"));
+        columnaUsuario2.setCellValueFactory(new PropertyValueFactory<Transaccion,String>("usuario2"));
+        columnaMontoUltimo.setCellValueFactory(new PropertyValueFactory<Transaccion,String>("monto"));
+        columnaTipoCambioUltimo.setCellValueFactory(new PropertyValueFactory<Transaccion,String>("tipoCambio"));
+        columnaAccion.setCellValueFactory(new PropertyValueFactory<Transaccion,String>("transaccion"));
+
     }
 
     public void llamarAlerta(String error){
@@ -273,8 +271,51 @@ public class ControladorVentanaParticipante implements Initializable {
         }
     }
 
+
     public void setSesionActual(){
         sesionActual = Integer.parseInt(ultimoEstadoSesion()[0]);
+    }
+
+    public void listarUltimasTransacciones(){
+
+        int idSesion = Integer.parseInt(ultimoEstadoSesion()[0]);
+        String estadoSesion = ultimoEstadoSesion()[1];
+        ArrayList<Oferta> ofertas = new ArrayList();
+
+        if(!estadoSesion.equals("ABIERTO")|| idSesion!=sesionActual){
+            llamarAlerta("Se ha cerrado la sesión actual. Se le devolverá a la pantalla principal");
+            Stage escenario = (Stage) botonEnviarOferta.getScene().getWindow();
+            escenario.close();
+        }
+
+        else{
+            try{
+                ArrayList<Transaccion> transacciones= new ArrayList<>();
+
+                String extraerTransacciones = "{call extraerUltimasTransacciones(?)}";
+                CallableStatement procedimientoTransaccion = connection.prepareCall(extraerTransacciones);
+                procedimientoTransaccion.setInt(1,sesionActual);
+                procedimientoTransaccion.execute();
+                ResultSet tuplesTransaccion = procedimientoTransaccion.getResultSet();
+
+                while(tuplesTransaccion.next()){
+                    String usuario1 = tuplesTransaccion.getString("CEDULAUSUARIO1");
+                    String transaccion = tuplesTransaccion.getString("ACCION");
+                    String monto = String.valueOf(tuplesTransaccion.getBigDecimal("MONTO"));
+                    String tipoCambio = String.valueOf(tuplesTransaccion.getBigDecimal("TIPOCAMBIO"));
+                    String usuario2 = tuplesTransaccion.getString("CEDULAUSUARIO2");
+                    transacciones.add(new Transaccion(usuario1,transaccion,monto,tipoCambio,usuario2));
+                }
+
+                ObservableList<Transaccion> listaTransacciones = FXCollections.observableArrayList(transacciones);
+                tablaUltimasTransaccionesC.setItems(listaTransacciones);
+            }
+            catch(SQLException e){
+                e.printStackTrace();
+            }
+        }
+
+
     }
 
 }
