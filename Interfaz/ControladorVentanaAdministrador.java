@@ -551,9 +551,10 @@ public class ControladorVentanaAdministrador implements Initializable {
                     String tipoCambio = String.valueOf(tuplesTransaccion.getBigDecimal("TIPOCAMBIO"));
                     String usuario2 = tuplesTransaccion.getString("CEDULAUSUARIO2");
                     if(contadorAuxiliar==2) {
-                        transacciones.add(new Transaccion(usuario1, transaccion, monto, tipoCambio, usuario2));
+                        transacciones.add(new Transaccion("","","","",""));
                         contadorAuxiliar=0;
                     }
+                    transacciones.add(new Transaccion(usuario1, transaccion, monto, tipoCambio, usuario2));
                     contadorAuxiliar++;
                     promedioTipoCambioVar+= Double.parseDouble(tipoCambio);
                     contador++;

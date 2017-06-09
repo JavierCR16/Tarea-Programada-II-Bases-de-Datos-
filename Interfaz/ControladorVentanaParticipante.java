@@ -10,6 +10,7 @@ import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.stage.Stage;
 
+import javax.xml.soap.Text;
 import java.math.BigDecimal;
 import java.net.URL;
 import java.sql.*;
@@ -66,6 +67,18 @@ public class ControladorVentanaParticipante implements Initializable {
 
     @FXML
     Button botonCerrarSesion;
+
+    @FXML
+    TextField txtMontoMinimoPizarraNegociaciones;
+
+    @FXML
+    TextField txtMontoMaximoPizarraNegociaciones;
+
+    @FXML
+    TextField txtTipoCambioMinimoPizarraNegociaciones;
+
+    @FXML
+    TextField txtTipoCambioMaxmoPizarraNegociaciones;
 
     @FXML
     TableColumn columnaUsuario1;
@@ -239,7 +252,6 @@ public class ControladorVentanaParticipante implements Initializable {
             escenario.close();
         }
         else {
-
             try {
                 String adquireOferta = "{call adquirirOfertas(?)}";
                 CallableStatement procedimientoAdquirirOfertas = connection.prepareCall(adquireOferta);
