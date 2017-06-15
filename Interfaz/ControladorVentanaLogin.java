@@ -38,6 +38,9 @@ public class ControladorVentanaLogin implements Initializable{
     Button botonLoguearAdministrador;
 
     @FXML
+    Button botonConsultarLogearGuestPublico;
+
+    @FXML
     Button botonLoguearAgente;
 
     @FXML
@@ -49,6 +52,14 @@ public class ControladorVentanaLogin implements Initializable{
     @FXML
     Label contrasennaOlvidadaAgente;
 
+    @FXML
+    Label labelColonesCambioPromPublico;
+
+    @FXML
+    Label labelDolaresCambioPromPublico;
+
+    @FXML
+    Label labelMontoTransPublico;
 
     Scene escenaActual;
 
@@ -82,6 +93,11 @@ public class ControladorVentanaLogin implements Initializable{
             escenaActual.setCursor(Cursor.DEFAULT);
         });
 
+        botonConsultarLogearGuestPublico.setOnAction(event -> {
+            Connection nuevaConexion = devolverConnection("guest","guest1");
+            Statement nuevoEstado = devolverStatement("guest","guest1");
+            escribirMovimientoTipoLogin("guest");
+        });
         contrasennaOlvidadaAdministrador.setOnMouseClicked(event -> {
 
             if(cuadroUsuarioAdministrador.getText().equals("") || cuadroContrasennaAdministrador.getText().equals(""))
@@ -103,6 +119,7 @@ public class ControladorVentanaLogin implements Initializable{
             limpiarPantallaLogin();
 
         });
+
 
         contrasennaOlvidadaAgente.setOnMouseClicked(event -> {
 

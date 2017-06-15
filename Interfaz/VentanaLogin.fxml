@@ -1,9 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.geometry.*?>
+<?import java.lang.*?>
 <?import javafx.scene.text.*?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
-
 
 <TabPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="428.0" prefWidth="990.0" tabClosingPolicy="UNAVAILABLE" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Interfaz.ControladorVentanaLogin">
   <tabs>
@@ -82,7 +83,49 @@
     </Tab>
       <Tab text="Público">
         <content>
-          <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0" />
+          <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
+               <children>
+                  <Label layoutX="111.0" layoutY="103.0" text="Monto transado para la sesion del dia">
+                     <font>
+                        <Font name="Baskerville Old Face" size="18.0" />
+                     </font>
+                  </Label>
+                  <Label layoutX="582.0" layoutY="103.0" text="Tipo cambio promedio para la sesion del dia">
+                     <font>
+                        <Font name="Baskerville Old Face" size="18.0" />
+                     </font>
+                  </Label>
+                  <Separator layoutX="492.0" layoutY="25.0" orientation="VERTICAL" prefHeight="345.0" prefWidth="0.0" />
+                  <Label layoutX="568.0" layoutY="173.0" text="Colones: ">
+                     <font>
+                        <Font name="Baskerville Old Face" size="16.0" />
+                     </font>
+                  </Label>
+                  <Label layoutX="568.0" layoutY="198.0" text="Dolares: ">
+                     <font>
+                        <Font name="Baskerville Old Face" size="16.0" />
+                     </font>
+                  </Label>
+                  <Label fx:id="labelMontoTransPublico" layoutX="111.0" layoutY="144.0" prefHeight="31.0" prefWidth="255.0">
+                     <opaqueInsets>
+                        <Insets />
+                     </opaqueInsets>
+                     <font>
+                        <Font name="Baskerville Old Face" size="18.0" />
+                     </font>
+                  </Label>
+                  <Label fx:id="labelColonesCambioPromPublico" layoutX="629.0" layoutY="174.0" prefHeight="23.0" prefWidth="151.0">
+                     <font>
+                        <Font name="Baskerville Old Face" size="18.0" />
+                     </font>
+                  </Label>
+                  <Label fx:id="labelDolaresCambioPromPublico" layoutX="629.0" layoutY="199.0" prefHeight="22.0" prefWidth="150.0">
+                     <font>
+                        <Font name="Baskerville Old Face" size="18.0" />
+                     </font>
+                  </Label>
+                  <Button fx:id="botonConsultarLogearGuestPublico" layoutX="857.0" layoutY="358.0" mnemonicParsing="false" prefHeight="24.0" prefWidth="112.0" text="Consultar" />
+               </children></AnchorPane>
         </content>
       </Tab>
   </tabs>
