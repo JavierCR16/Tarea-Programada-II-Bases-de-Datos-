@@ -217,7 +217,7 @@ public class ControladorVentanaLogin implements Initializable{
             procedimientoTransaccion.execute();
             ResultSet tuplesTransaccion = procedimientoTransaccion.getResultSet();
 
-            int contadorAuxiliar = 0;
+            int contadorAuxiliar = 0;//jeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee
             while (tuplesTransaccion.next()) {
                 String usuario1 = tuplesTransaccion.getString("CEDULAUSUARIO1");
                 String transaccion = tuplesTransaccion.getString("ACCION");
