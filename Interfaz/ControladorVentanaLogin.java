@@ -1,5 +1,8 @@
 package Interfaz;
 
+import Auxiliares.Transaccion;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
@@ -53,13 +56,16 @@ public class ControladorVentanaLogin implements Initializable{
     Label contrasennaOlvidadaAgente;
 
     @FXML
-    Label labelColonesCambioPromPublico;
+    Label lblCompraDolares;
 
     @FXML
-    Label labelDolaresCambioPromPublico;
+    Label lblVentaDolares;
 
     @FXML
     Label labelMontoTransPublico;
+
+    @FXML
+    ComboBox cajaSesionEstadisticas;
 
     Scene escenaActual;
 
@@ -97,6 +103,7 @@ public class ControladorVentanaLogin implements Initializable{
             Connection nuevaConexion = devolverConnection("guest","guest1");
             Statement nuevoEstado = devolverStatement("guest","guest1");
             escribirMovimientoTipoLogin("guest");
+            establecerEstadisticas();
         });
         contrasennaOlvidadaAdministrador.setOnMouseClicked(event -> {
 
@@ -161,8 +168,7 @@ public class ControladorVentanaLogin implements Initializable{
             limpiarPantallaLogin();
         });
 
-
-
+        llenarComboboxIDsesiones();
     }
 
     public void establecerConexion() {
@@ -180,7 +186,66 @@ public class ControladorVentanaLogin implements Initializable{
         }
 
     }
+    public void llenarComboboxIDsesiones() {
+        try {
+            String adquirirIdSesiones = "{call adquirirIdSesiones()}";
+            CallableStatement procedimientoAdquirirIDsesiones = connection.prepareCall(adquirirIdSesiones);
+            procedimientoAdquirirIDsesiones.execute();
+            ResultSet tuplesIDsesiones = procedimientoAdquirirIDsesiones.getResultSet();
+            ArrayList<String> idSesiones = new ArrayList<>();
+            while (tuplesIDsesiones.next()) {
+                String idSesion = String.valueOf(tuplesIDsesiones.getInt("IDSESION"));
+                idSesiones.add(idSesion);
+            }
+            ObservableList<String> listaSesiones = FXCollections.observableArrayList(idSesiones);
+            cajaSesionEstadisticas.setItems(listaSesiones);
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+    public void establecerEstadisticas(){
+        int idSesion = Integer.parseInt(cajaSesionEstadisticas.getSelectionModel().getSelectedItem().toString());
+        try {
+            ArrayList<Transaccion> transacciones = new ArrayList<>();
+            Double totalCompraDolaresVar = 0.0;
+            Double totalVentaDolaresVar = 0.0;
+            Double promedioTipoCambioVar = 0.0;
+            int contador = 0;
+            String extraerTransacciones = "{call extraerUltimasTransacciones(?)}";
+            CallableStatement procedimientoTransaccion = connection.prepareCall(extraerTransacciones);
+            procedimientoTransaccion.setInt(1, idSesion);
+            procedimientoTransaccion.execute();
+            ResultSet tuplesTransaccion = procedimientoTransaccion.getResultSet();
 
+            int contadorAuxiliar = 0;
+            while (tuplesTransaccion.next()) {
+                String usuario1 = tuplesTransaccion.getString("CEDULAUSUARIO1");
+                String transaccion = tuplesTransaccion.getString("ACCION");
+                String monto = String.valueOf(tuplesTransaccion.getBigDecimal("MONTO"));
+                String tipoCambio = String.valueOf(tuplesTransaccion.getBigDecimal("TIPOCAMBIO"));
+                String usuario2 = tuplesTransaccion.getString("CEDULAUSUARIO2");
+                if (contadorAuxiliar == 2) {
+                    transacciones.add(new Transaccion("", "", "", "", ""));
+                    contadorAuxiliar = 0;
+                }
+                transacciones.add(new Transaccion(usuario1, transaccion, monto, tipoCambio, usuario2));
+                contadorAuxiliar++;
+                promedioTipoCambioVar += Double.parseDouble(tipoCambio);
+                contador++;
+                if (transaccion.equals("COMPRA"))
+                    totalCompraDolaresVar += Double.parseDouble(monto);
+                else
+                    totalVentaDolaresVar += Double.parseDouble(monto);
+            }
+            promedioTipoCambioVar = promedioTipoCambioVar / contador;
+
+            lblCompraDolares.setText(totalCompraDolaresVar.toString());
+            lblVentaDolares.setText(totalVentaDolaresVar.toString());
+            labelMontoTransPublico.setText(promedioTipoCambioVar.toString());
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+    }
     public boolean existeConexionUsuarios(String username,String password){
         Connection conexion = null;
         Statement estado= null;

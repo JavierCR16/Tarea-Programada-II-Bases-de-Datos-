@@ -85,23 +85,23 @@
         <content>
           <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
                <children>
-                  <Label layoutX="111.0" layoutY="103.0" text="Monto transado para la sesion del dia">
+                  <Label layoutX="605.0" layoutY="101.0" text="Monto transado para la sesion del dia">
                      <font>
                         <Font name="Baskerville Old Face" size="18.0" />
                      </font>
                   </Label>
-                  <Label layoutX="582.0" layoutY="103.0" text="Tipo cambio promedio para la sesion del dia">
+                  <Label layoutX="121.0" layoutY="101.0" text="Tipo cambio promedio para la sesion del dia">
                      <font>
                         <Font name="Baskerville Old Face" size="18.0" />
                      </font>
                   </Label>
                   <Separator layoutX="492.0" layoutY="25.0" orientation="VERTICAL" prefHeight="345.0" prefWidth="0.0" />
-                  <Label layoutX="568.0" layoutY="173.0" text="Colones: ">
+                  <Label layoutX="568.0" layoutY="173.0" text="Venta Dolares:">
                      <font>
                         <Font name="Baskerville Old Face" size="16.0" />
                      </font>
                   </Label>
-                  <Label layoutX="568.0" layoutY="198.0" text="Dolares: ">
+                  <Label layoutX="568.0" layoutY="198.0" text="Compra Dolares:">
                      <font>
                         <Font name="Baskerville Old Face" size="16.0" />
                      </font>
@@ -111,20 +111,21 @@
                         <Insets />
                      </opaqueInsets>
                      <font>
-                        <Font name="Baskerville Old Face" size="18.0" />
+                        <Font name="Arial" size="16.0" />
                      </font>
                   </Label>
-                  <Label fx:id="labelColonesCambioPromPublico" layoutX="629.0" layoutY="174.0" prefHeight="23.0" prefWidth="151.0">
+                  <Label fx:id="lblVentaDolares" layoutX="699.0" layoutY="171.0" prefHeight="23.0" prefWidth="122.0">
                      <font>
-                        <Font name="Baskerville Old Face" size="18.0" />
+                        <Font name="Arial" size="16.0" />
                      </font>
                   </Label>
-                  <Label fx:id="labelDolaresCambioPromPublico" layoutX="629.0" layoutY="199.0" prefHeight="22.0" prefWidth="150.0">
+                  <Label fx:id="lblCompraDolares" layoutX="699.0" layoutY="197.0" prefHeight="22.0" prefWidth="122.0">
                      <font>
-                        <Font name="Baskerville Old Face" size="18.0" />
+                        <Font name="Arial" size="16.0" />
                      </font>
                   </Label>
                   <Button fx:id="botonConsultarLogearGuestPublico" layoutX="857.0" layoutY="358.0" mnemonicParsing="false" prefHeight="24.0" prefWidth="112.0" text="Consultar" />
+                  <ComboBox fx:id="cajaSesionEstadisticas" layoutX="857.0" layoutY="325.0" prefHeight="25.0" prefWidth="114.0" />
                </children></AnchorPane>
         </content>
       </Tab>
